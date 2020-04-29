@@ -1,0 +1,111 @@
+{
+  "name": "@revolut/checkout",
+  "version": "1.0.0",
+  "description": "TODO",
+  "author": "John Grishin <hi@johngrish.in>",
+  "license": "Apache-2.0",
+  "repository": "revolut-engineering/revolut-checkout",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "cjs",
+    "esm",
+    "types",
+    "server"
+  ],
+  "keywords": [
+    "revolut",
+    "merchant",
+    "checkout",
+    "acquiring",
+    "widget"
+  ],
+  "scripts": {
+    "build": "run-s build:*",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "prebuild": "rimraf esm cjs types",
+    "test": "jest",
+    "lint": "eslint --ext ts --ext js src/",
+    "size": "size-limit",
+    "release": "np --no-cleanup",
+    "preversion": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "auto-changelog": {
+    "commitLimit": 10,
+    "template": ".changelog.hbs"
+  },
+  "size-limit": [
+    {
+      "path": "./esm/index.js",
+      "limit": "200B"
+    }
+  ],
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "standard",
+      "prettier"
+    ],
+    "env": {
+      "jest/globals": true
+    },
+    "plugins": [
+      "jest",
+      "prettier",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": 2,
+      "@typescript-eslint/no-use-before-define": [
+        2,
+        {
+          "functions": false,
+          "classes": false,
+          "enums": false,
+          "variables": false,
+          "typedefs": false
+        }
+      ],
+      "no-unused-vars": 0,
+      "no-undef": 0,
+      "prettier/prettier": 2,
+      "no-shadow": 2
+    }
+  },
+  "jest": {
+    "preset": "ts-jest/presets/js-with-ts"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.4.1",
+    "@testing-library/jest-dom": "^5.2.0",
+    "@types/eslint": "^6.1.8",
+    "@types/eslint-plugin-prettier": "^2.2.0",
+    "@types/jest": "^25.1.2",
+    "@types/prettier": "^1.19.1",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.7.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^25.2.0",
+    "np": "^6.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "size-limit": "^4.4.1",
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.7.5"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "jsx": "react"
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src"]
+}
