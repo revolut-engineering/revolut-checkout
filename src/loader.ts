@@ -1,7 +1,7 @@
 import { MODE, URLS } from './constants'
-import { CreateRevolutCheckout, RevolutCheckoutInstance, Mode } from './types'
+import { RevolutCheckout, RevolutCheckoutInstance, Mode } from './types'
 
-let loaded: CreateRevolutCheckout = null
+let loaded: RevolutCheckout = null
 
 /**
  * Load [`RevolutCheckout.js`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-revolutcheckout)

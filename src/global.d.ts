@@ -1,5 +1,5 @@
-import { CreateRevolutCheckout } from './types'
+import { RevolutCheckout } from './types'
 
 declare global {
-  var RevolutCheckout: CreateRevolutCheckout | undefined
+  var RevolutCheckout: RevolutCheckout | undefined
 }

@@ -330,15 +330,15 @@ export interface CustomerDetails {
 }
 
 export interface PopupOptions extends CustomerDetails {
-  /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
+  /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
   onError?: (error: RevolutCheckoutError) => void
-  /** Callback if a user did not complete the transaction and canceled the authorisation or closed the checkout window */
+  /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
 }
 
-export interface CardFieldOptions extends CustomerDetails {
+export interface CardFieldOptions extends PopupOptions {
   /** Empty `<div>` inside your form */
   target: HTMLElement
   /** Styles object for customisation inside the card field iframe */
@@ -369,7 +369,7 @@ export interface CardFieldOptions extends CustomerDetails {
   onValidation?: (errors: ValidationError[]) => void
   /**
    * Callback called on field status change and contains status object,
-   * depeding on current field state:
+   * depending on current field state:
    *
    * ```ts
    * {
@@ -382,12 +382,6 @@ export interface CardFieldOptions extends CustomerDetails {
    * ```
    */
   onStatusChange?: (status: FieldStatus) => void
-  /** Callback will be called when the payment is completed successfully */
-  onSuccess?: () => void
-  /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
-  onError?: (error: RevolutCheckoutError) => void
-  /** Callback if a user did not complete the transaction and canceled the authorisation or closed the checkout window */
-  onCancel?: () => void
 }
 
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
@@ -408,10 +402,10 @@ export interface RevolutCheckoutInstance {
    * @see https://developer.revolut.com/docs/merchant-api/#revolut-widget-revolut-widget-integration-guide-card-field
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
-  /** Destroy instance */
+  /** Manually destroy popup or card field if needed	 */
   destroy: () => void
 }
 
-export interface CreateRevolutCheckout {
+export interface RevolutCheckout {
   (token: string): Promise<RevolutCheckoutInstance>
 }
