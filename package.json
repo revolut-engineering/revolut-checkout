@@ -1,9 +1,10 @@
 {
   "name": "@revolut/checkout",
   "version": "0.1.0-0",
-  "description": "TODO",
+  "description": "RevolutCheckout.js as npm module",
   "author": "John Grishin <hi@johngrish.in>",
   "license": "Apache-2.0",
+  "homepage": "https://business.revolut.com",
   "repository": "revolut-engineering/revolut-checkout",
   "main": "cjs/index.js",
   "module": "esm/index.js",
