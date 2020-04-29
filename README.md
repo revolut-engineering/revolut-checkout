@@ -1,6 +1,6 @@
 # [RevolutCheckout.js](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
 
-[![](https://flat.badgen.net/npm/v/@revolut/checkout?cache=600)](https://www.npmjs.com/package/@revolut/checkout) [![](https://flat.badgen.net/bundlephobia/minzip/@revolut/checkout?cache=600)](https://bundlephobia.com/result?p=@revolut/checkout)
+[![](https://flat.badgen.net/npm/v/@revolut/checkout)](https://www.npmjs.com/package/@revolut/checkout) [![](https://flat.badgen.net/bundlephobia/minzip/@revolut/checkout)](https://bundlephobia.com/result?p=@revolut/checkout)
 
 ## Install
 
