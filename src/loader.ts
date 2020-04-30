@@ -8,7 +8,7 @@ let loaded: RevolutCheckout = null
  * and create [`Instance`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance) for the order `token`.
  *
  * @param token `public_id`  from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-api-order-object-create-payment-order) request on BE
- * @param mode BE environment
+ * @param mode BE environment, default to `'prod'`
  *
  * @see [`RevolutCheckout.js` reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-revolutcheckout)
  *
@@ -22,7 +22,7 @@ let loaded: RevolutCheckout = null
 export function RevolutCheckoutLoader(
   token: string,
   mode: Mode = RevolutCheckoutLoader.mode
-) {
+): Promise<RevolutCheckoutInstance> {
   if (loaded) {
     return loaded(token)
   }
@@ -35,7 +35,7 @@ export function RevolutCheckoutLoader(
 
   document.head.appendChild(script)
 
-  return new Promise<RevolutCheckoutInstance>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     function handleError() {
       document.head.removeChild(script)
 
