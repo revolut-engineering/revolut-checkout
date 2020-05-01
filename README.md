@@ -19,7 +19,7 @@
 #### Params
 
 - `token: string` — `public_id` from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-api-order-object-create-payment-order) API request
-- `mode?: 'prod' | 'sandbox'` — [API](https://developer.revolut.com/docs/merchant-api/#api) environment, default to `'prod'`
+- <code>mode?: '<a href="https://business.revolut.com">prod</a>' | '<a href="https://sandbox-business.revolut.com">sandbox</a>'</code> — [API](https://developer.revolut.com/docs/merchant-api/#api) environment, default to `'prod'`
 
 ```js
 import RevolutCheckout from '@revolut/checkout'
@@ -53,6 +53,13 @@ import {
   RevolutCheckoutInstance,
 } from '@revolut/checkout'
 ```
+
+## Docs
+
+- [RevolutCheckout.js reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
+- [API](https://developer.revolut.com/docs/merchant-api)
+- [Integration examples](https://developer.revolut.com/docs/merchant-api/#integration-examples)
+- [Plugins](https://developer.revolut.com/docs/merchant-api/#plugins)
 
 ---
 © 2020 Revolut Ltd
