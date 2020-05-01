@@ -57,7 +57,7 @@ import {
 ## Docs
 
 - [RevolutCheckout.js reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
-- [API](https://developer.revolut.com/docs/merchant-api)
+- [API](https://developer.revolut.com/docs/merchant-api/#api)
 - [Integration examples](https://developer.revolut.com/docs/merchant-api/#integration-examples)
 - [Plugins](https://developer.revolut.com/docs/merchant-api/#plugins)
 
