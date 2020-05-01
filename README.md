@@ -18,8 +18,8 @@
 
 #### Params
 
-- `token: string` — `public_id` from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-api-order-object-create-payment-order) request on BE
-- `mode?: 'prod' | 'sandbox'` — BE environment, default to `'prod'`
+- `token: string` — `public_id` from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-api-order-object-create-payment-order) API request
+- `mode?: 'prod' | 'sandbox'` — [API](https://developer.revolut.com/docs/merchant-api/#api) environment, default to `'prod'`
 
 ```js
 import RevolutCheckout from '@revolut/checkout'
