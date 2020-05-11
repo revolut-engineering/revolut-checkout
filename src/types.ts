@@ -387,6 +387,8 @@ export interface CardFieldOptions extends PopupOptions {
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
   submit: (meta?: CustomerDetails) => void
+  /** Manually trigger validation, by default field will show errors only after user interacted with it */
+  validate: () => void
 }
 
 export interface RevolutCheckoutInstance {
