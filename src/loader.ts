@@ -7,10 +7,10 @@ let loaded: RevolutCheckout = null
  * Load [`RevolutCheckout.js`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-revolutcheckout)
  * and create [`Instance`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance) for the order `token`.
  *
- * @param token `public_id`  from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-api-order-object-create-payment-order) API request
- * @param mode [API](https://developer.revolut.com/docs/merchant-api/#api) environment, default to `'prod'`
+ * @param token `public_id`  from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-reference-api-reference-orders-create-an-order) API request
+ * @param mode [API](https://developer.revolut.com/docs/merchant-api/#api-reference) environment, default to `'prod'`
  *
- * @see [`RevolutCheckout.js` reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-revolutcheckout)
+ * @see [`RevolutCheckout.js` reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
  *
  * @example
  * ```js

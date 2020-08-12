@@ -282,6 +282,15 @@ export type RevolutCheckoutErrorType =
   | 'error.email-is-not-specified'
   | 'error.order-already-completed'
   | 'error.deactivated-merchant'
+  | 'error.invalid-postcode'
+  | 'error.invalid-email'
+  | 'error.do-not-honour'
+  | 'error.insufficient-funds'
+  | 'error.3ds-failed'
+  | 'error.expired-card'
+  | 'error.incorrect-cvv-code'
+  | 'error.order-is-cancelled'
+  | 'error.transaction-failed'
 
 export interface ValidationError extends Error {
   name: 'Validation'
@@ -291,6 +300,7 @@ export interface ValidationError extends Error {
 export interface RevolutCheckoutError extends Error {
   name: 'RevolutCheckout'
   type: RevolutCheckoutErrorType
+  code?: number
 }
 
 export type StatusType =
@@ -395,13 +405,13 @@ export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolut-widget-revolut-widget-integration-guide-pop-up
+   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-paywithpopup
    */
   payWithPopup: (options?: PopupOptions) => RevolutCheckoutInstance
   /**
    * Create integrated card field inside your form.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolut-widget-revolut-widget-integration-guide-card-field
+   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
   /** Manually destroy popup or card field if needed	 */
