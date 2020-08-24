@@ -263,6 +263,7 @@ export type ValidationErrorType =
   | 'validation.card.expiry.required'
   | 'validation.card.cvv.invalid'
   | 'validation.card.cvv.required'
+  | 'validation.card.type.invalid'
   | 'validation.postcode.invalid'
   | 'validation.postcode.required'
   | 'validation.email.incomplete'
