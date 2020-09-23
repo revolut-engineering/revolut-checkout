@@ -361,7 +361,7 @@ export interface CustomerDetails {
   shippingAddress?: Address
 }
 
-export interface PopupOptions extends CustomerDetails {
+export interface CommonOptions {
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
@@ -369,6 +369,8 @@ export interface PopupOptions extends CustomerDetails {
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
 }
+
+export interface PopupOptions extends CustomerDetails, CommonOptions {}
 
 export interface CardFieldOptions extends PopupOptions {
   /** Empty `<div>` inside your form */
@@ -416,6 +418,13 @@ export interface CardFieldOptions extends PopupOptions {
   onStatusChange?: (status: FieldStatus) => void
 }
 
+export interface PayWithRevolutOptions extends CommonOptions {
+  /** Revolut user phone number */
+  phone?: string
+  /** Revolut user email */
+  email?: string
+}
+
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
   submit: (meta?: CustomerDetails) => void
@@ -436,6 +445,8 @@ export interface RevolutCheckoutInstance {
    * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
+  /** @private */
+  payWithRevolut?: (options: PayWithRevolutOptions) => RevolutCheckoutInstance
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
 }
