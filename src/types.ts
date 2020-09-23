@@ -419,6 +419,8 @@ export interface CardFieldOptions extends PopupOptions {
 }
 
 export interface PayWithRevolutOptions extends CommonOptions {
+  /** Empty element inside payment page */
+  target: HTMLElement
   /** Revolut user phone number */
   phone?: string
   /** Revolut user email */
