@@ -427,12 +427,33 @@ export interface PayWithRevolutOptions extends CommonOptions {
   email?: string
 }
 
+export interface PaymentRequestOptions extends CommonOptions {
+  /** Empty element inside payment page */
+  target: HTMLElement
+  /** Request shipping in payment request UI */
+  requestShipping?: boolean
+  /** Disable payment request via basic card */
+  disableBasicCard?: boolean
+}
+
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
   submit: (meta?: CustomerDetails) => void
   /** Manually trigger validation, by default field will show errors only after user interacted with it */
   validate: () => void
 }
+
+export interface PaymentRequestInstance {
+  /** Render the payment request button */
+  render: () => Promise<void>
+  /** Check if user can make payment via a supported payment request method  */
+  canMakePayment: () => Promise<boolean>
+  /** Manually destroy the payment request if needed */
+  destroy: () => void
+}
+export interface WidgetPaymentRequestInstance
+  extends PaymentRequestInstance,
+    RevolutCheckoutInstance {}
 
 export interface RevolutCheckoutInstance {
   /**
@@ -449,6 +470,8 @@ export interface RevolutCheckoutInstance {
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
   /** @private */
   payWithRevolut?: (options: PayWithRevolutOptions) => RevolutCheckoutInstance
+  /** Accept payments via the W3C payment request API*/
+  paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
 }
