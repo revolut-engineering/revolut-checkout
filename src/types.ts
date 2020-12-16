@@ -361,7 +361,7 @@ export interface CustomerDetails {
   shippingAddress?: Address
 }
 
-export interface PopupOptions extends CustomerDetails {
+export interface CommonOptions {
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
@@ -369,6 +369,8 @@ export interface PopupOptions extends CustomerDetails {
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
 }
+
+export interface PopupOptions extends CustomerDetails, CommonOptions {}
 
 export interface CardFieldOptions extends PopupOptions {
   /** Empty `<div>` inside your form */
@@ -416,6 +418,24 @@ export interface CardFieldOptions extends PopupOptions {
   onStatusChange?: (status: FieldStatus) => void
 }
 
+export interface PayWithRevolutOptions extends CommonOptions {
+  /** Empty element inside payment page */
+  target: HTMLElement
+  /** Revolut user phone number */
+  phone?: string
+  /** Revolut user email */
+  email?: string
+}
+
+export interface PaymentRequestOptions extends CommonOptions {
+  /** Empty element inside payment page */
+  target: HTMLElement
+  /** Request shipping in payment request UI */
+  requestShipping?: boolean
+  /** Disable payment request via basic card */
+  disableBasicCard?: boolean
+}
+
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
   submit: (meta?: CustomerDetails) => void
@@ -423,19 +443,35 @@ export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   validate: () => void
 }
 
+export interface PaymentRequestInstance {
+  /** Render the payment request button */
+  render: () => Promise<void>
+  /** Check if user can make payment via a supported payment request method  */
+  canMakePayment: () => Promise<boolean>
+  /** Manually destroy the payment request if needed */
+  destroy: () => void
+}
+export interface WidgetPaymentRequestInstance
+  extends PaymentRequestInstance,
+    RevolutCheckoutInstance {}
+
 export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-paywithpopup
+   * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-paywithpopup
    */
   payWithPopup: (options?: PopupOptions) => RevolutCheckoutInstance
   /**
    * Create integrated card field inside your form.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-createcardfield
+   * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
+  /** @private */
+  payWithRevolut?: (options: PayWithRevolutOptions) => RevolutCheckoutInstance
+  /** Accept payments via the W3C payment request API*/
+  paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
 }
