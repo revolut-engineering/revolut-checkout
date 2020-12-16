@@ -4,13 +4,13 @@ import { RevolutCheckout, RevolutCheckoutInstance, Mode } from './types'
 let loaded: RevolutCheckout = null
 
 /**
- * Load [`RevolutCheckout.js`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-revolutcheckout)
- * and create [`Instance`](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance) for the order `token`.
+ * Load [`RevolutCheckout.js`](https://developer.revolut.com/docs/revolut-checkout-js/#revolutcheckout)
+ * and create [`Instance`](https://developer.revolut.com/docs/revolut-checkout-js/#instance) for the order `token`.
  *
- * @param token `public_id`  from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-reference-api-reference-orders-create-an-order) API request
- * @param mode [API](https://developer.revolut.com/docs/merchant-api/#api-reference) environment, default to `'prod'`
+ * @param token `public_id`  from [create payment order](https://developer.revolut.com/api-reference/merchant/#operation/createOrder) API request
+ * @param mode [API](https://developer.revolut.com/docs/revolut-checkout-js/#revolutcheckout-parameters) environment, defaults to `'prod'`
  *
- * @see [`RevolutCheckout.js` reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
+ * @see [`RevolutCheckout.js` reference](https://developer.revolut.com/docs/revolut-checkout-js)
  *
  * @example
  * ```js

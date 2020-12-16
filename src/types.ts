@@ -459,13 +459,13 @@ export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-paywithpopup
+   * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-paywithpopup
    */
   payWithPopup: (options?: PopupOptions) => RevolutCheckoutInstance
   /**
    * Create integrated card field inside your form.
    *
-   * @see https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference-instance-createcardfield
+   * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
   /** @private */
