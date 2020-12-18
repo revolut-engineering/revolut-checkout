@@ -18,8 +18,8 @@
 
 #### Params
 
-- `token: string` — `public_id` from [create payment order](https://developer.revolut.com/docs/merchant-api/#api-reference-api-reference-orders-create-an-order) API request
-- <code>mode?: '<a href="https://business.revolut.com">prod</a>' | '<a href="https://sandbox-business.revolut.com">sandbox</a>'</code> — [API](https://developer.revolut.com/docs/merchant-api/#api) environment, default to `'prod'`
+- `token: string` — `public_id` from [create payment order](https://developer.revolut.com/api-reference/merchant/#operation/createOrder) API request
+- <code>mode?: '<a href="https://business.revolut.com">prod</a>' | '<a href="https://sandbox-business.revolut.com">sandbox</a>'</code> — [API](https://developer.revolut.com/api-reference/merchant/) environment, defaults to `'prod'`
 
 ```js
 import RevolutCheckout from '@revolut/checkout'
@@ -33,7 +33,7 @@ RevolutCheckout('TOKEN_XXX', 'prod').then((instance) => {
 })
 ```
 
-For more information read our [official documentation](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference).
+For more information read our [official documentation](https://developer.revolut.com/docs/revolut-checkout-js/).
 
 
 ### TypeScript support
@@ -56,10 +56,11 @@ import {
 
 ## Docs
 
-- [RevolutCheckout.js reference](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
-- [API](https://developer.revolut.com/docs/merchant-api/#api-reference)
-- [Integration examples](https://developer.revolut.com/docs/merchant-api/#integration-guide-integration-examples)
-- [Plugins](https://developer.revolut.com/docs/merchant-api/#plugins)
+- [RevolutCheckout.js reference](https://developer.revolut.com/docs/revolut-checkout-js/)
+- [API guide](https://developer.revolut.com/docs/accept-payments/)
+- [API reference](https://developer.revolut.com/api-reference/merchant/)
+- [Integration examples](https://developer.revolut.com/docs/accept-payments/#tutorials)
+- [Plugins](https://developer.revolut.com/docs/accept-payments/#plugins)
 
 ---
 © 2020 Revolut Ltd
