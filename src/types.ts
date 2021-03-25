@@ -373,7 +373,7 @@ export interface CustomerDetails {
 }
 
 export interface CommonOptions {
-  /** Controls the language of the text in the widget. */
+  /** Controls the language of the text in the widget method */
   locale: Locale
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
@@ -487,7 +487,7 @@ export interface RevolutCheckoutInstance {
   paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
-  /** Controls the language of the text in the widget. */
+  /** Controls the language of the text in the widget */
   setDefaultLocale: (lang: Locale) => void
 }
 
