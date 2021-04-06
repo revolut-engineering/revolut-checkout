@@ -455,7 +455,7 @@ export interface PaymentRequestOptions extends CommonOptions {
   requestShipping?: boolean
   /** Disable payment request via basic card */
   disableBasicCard?: boolean
-  /** Styles of the PayWithRevolut button */
+  /** Styles of the PaymentRequest button */
   buttonStyle?: ButtonStyleOptions
 }
 
