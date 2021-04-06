@@ -13,3 +13,17 @@ export const URLS = {
 } as const
 
 export type URLS = typeof URLS
+
+export enum ButtonSize {
+  LARGE = 'large',
+  SMALL = 'small',
+}
+export enum ButtonVariant {
+  DARK = 'dark',
+  LIGHT = 'light',
+  AUTO = 'auto',
+}
+export enum PaymentMethodType {
+  MERCHANT = 'merchant',
+  CUSTOMER = 'customer',
+}
