@@ -1,4 +1,4 @@
-import { MODE, ButtonVariant, ButtonSize, PaymentMethodType } from './constants'
+import { MODE } from './constants'
 
 export type Mode = MODE[keyof MODE]
 
@@ -351,8 +351,8 @@ export type FieldStyles = Partial<StatusRecord<Partial<CSSStyleDeclaration>>>
 export type FieldClasses = Partial<StatusRecord<string>>
 
 export type ButtonStyleOptions = {
-  variant?: ButtonVariant
-  size?: ButtonSize
+  variant?: 'dark' | 'light' | 'auto'
+  size?: 'large' | 'small'
 }
 
 export interface Address {
@@ -387,7 +387,7 @@ export interface CommonOptions {
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
   /** Indicates in which case this saved payment method can be used for payments */
-  savePaymentMethodFor?: PaymentMethodType
+  savePaymentMethodFor?: 'merchant' | 'customer'
 }
 export interface PopupOptions extends CustomerDetails, CommonOptions {}
 
@@ -437,14 +437,14 @@ export interface CardFieldOptions extends PopupOptions {
   onStatusChange?: (status: FieldStatus) => void
 }
 
-export interface PayWithRevolutOptions extends CommonOptions {
+export interface RevolutPayOptions extends CommonOptions {
   /** Empty element inside payment page */
   target: HTMLElement
   /** Revolut user phone number */
   phone?: string
   /** Revolut user email */
   email?: string
-  /** Styles of the PayWithRevolut button */
+  /** Styles of the RevolutPay button */
   buttonStyle?: ButtonStyleOptions
 }
 
@@ -492,7 +492,7 @@ export interface RevolutCheckoutInstance {
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
   /** @private */
-  payWithRevolut?: (options: PayWithRevolutOptions) => RevolutCheckoutInstance
+  revolutPay?: (options: RevolutPayOptions) => RevolutCheckoutInstance
   /** Accept payments via the W3C payment request API */
   paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
   /** Manually destroy popup or card field if needed	 */
