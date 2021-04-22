@@ -1,4 +1,4 @@
-# [RevolutCheckout.js](https://developer.revolut.com/docs/merchant-api/#revolutcheckout-js-reference)
+# [RevolutCheckout.js](https://developer.revolut.com/docs/revolut-checkout-js/)
 
 [![](https://flat.badgen.net/npm/v/@revolut/checkout)](https://www.npmjs.com/package/@revolut/checkout) [![](https://flat.badgen.net/bundlephobia/minzip/@revolut/checkout)](https://bundlephobia.com/result?p=@revolut/checkout)
 
