@@ -379,7 +379,7 @@ export interface CustomerDetails {
 
 export interface CommonOptions {
   /** Controls the language of the text in the widget method */
-  locale: Locale
+  locale?: Locale
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
@@ -491,7 +491,7 @@ export interface RevolutCheckoutInstance {
    * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
-  /** @private */
+  /** Accept payments via Revolut pay */
   revolutPay?: (options: RevolutPayOptions) => RevolutCheckoutInstance
   /** Accept payments via the W3C payment request API */
   paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
