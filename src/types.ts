@@ -494,7 +494,9 @@ export interface RevolutCheckoutInstance {
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
   /** Accept payments via Revolut pay */
-  revolutPay?: (options: RevolutPayOptions) => RevolutCheckoutInstance
+  revolutPay: (options: RevolutPayOptions) => RevolutCheckoutInstance
+  /** Accept payments via open banking */
+  openBanking?: (options: CommonOptions) => RevolutCheckoutInstance
   /** Accept payments via the W3C payment request API */
   paymentRequest: (options: PaymentRequestOptions) => PaymentRequestInstance
   /** Manually destroy popup or card field if needed	 */
