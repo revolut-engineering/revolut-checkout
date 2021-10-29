@@ -463,7 +463,9 @@ export interface PaymentRequestOptions extends CommonOptions {
 
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
-  submit: (meta?: CustomerDetails) => void
+  submit: (
+    meta?: CustomerDetails & CommonOptions['savePaymentMethodFor']
+  ) => void
   /** Manually trigger validation, by default field will show errors only after user interacted with it */
   validate: () => void
 }
