@@ -357,6 +357,9 @@ export type ButtonStyleOptions = {
   action?: 'donate' | 'pay' | 'subscribe' | 'buy'
 }
 
+export type SubmitMeta = CustomerDetails &
+  Pick<CommonOptions, 'savePaymentMethodFor'>
+
 export interface Address {
   countryCode: CountryCode
   postcode: string
@@ -463,7 +466,7 @@ export interface PaymentRequestOptions extends CommonOptions {
 
 export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   /** Submit entered card details along with a customer details */
-  submit: (meta?: CustomerDetails) => void
+  submit: (meta?: SubmitMeta) => void
   /** Manually trigger validation, by default field will show errors only after user interacted with it */
   validate: () => void
 }
