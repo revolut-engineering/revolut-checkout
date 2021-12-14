@@ -351,6 +351,7 @@ export type FieldStyles = Partial<StatusRecord<Partial<CSSStyleDeclaration>>>
 export type FieldClasses = Partial<StatusRecord<string>>
 
 export type ButtonStyleOptions = {
+  height?: string
   size?: 'large' | 'small'
   radius?: 'none' | 'small' | 'large'
   variant?: 'dark' | 'light' | 'light-outlined'
