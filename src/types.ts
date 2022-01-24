@@ -452,6 +452,8 @@ export interface RevolutPayOptions extends CommonOptions {
   email?: string
   /** Styles of the RevolutPay button */
   buttonStyle?: ButtonStyleOptions
+  /** Callback when user clicks on the RevolutPay button */
+  onClick?: () => void
 }
 
 export interface PaymentRequestOptions extends CommonOptions {
