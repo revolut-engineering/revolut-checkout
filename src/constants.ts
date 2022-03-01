@@ -8,6 +8,7 @@ export const LOCALES = [
   'pl',
   'pt',
   'es',
+  'cs',
 ] as const
 
 export const MODE = {
