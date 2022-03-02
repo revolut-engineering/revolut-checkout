@@ -1,8 +1,4 @@
-import {
-  ValidationError,
-  RevolutCheckoutError,
-  RevolutCheckoutLocale,
-} from './types'
+import { ValidationError, RevolutCheckoutError, Locale } from './types'
 
 import { LOCALES } from './constants'
 
@@ -16,8 +12,6 @@ export function isRevolutCheckoutError(
   return error != null && error.name === 'RevolutCheckout'
 }
 
-export function isValidRevolutCheckoutLocale(
-  locale: any
-): locale is RevolutCheckoutLocale {
-  return locale && LOCALES.includes(locale)
+export function isValidLocale(locale: unknown): locale is Locale {
+  return locale && LOCALES.some((value) => value === locale)
 }

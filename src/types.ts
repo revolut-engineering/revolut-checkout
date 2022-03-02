@@ -254,7 +254,7 @@ export type CountryCode =
   | 'QA'
   | 'MZ'
 
-export type RevolutCheckoutLocale = typeof LOCALES[number]
+export type Locale = typeof LOCALES[number]
 
 export type ValidationErrorType =
   | 'validation.card.number.incomplete'
@@ -376,7 +376,7 @@ export interface CustomerDetails {
 
 export interface CommonOptions {
   /** Controls the language of the text in the widget method */
-  locale?: RevolutCheckoutLocale
+  locale?: Locale
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
@@ -499,7 +499,7 @@ export interface RevolutCheckoutInstance {
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
-  setDefaultLocale: (lang: RevolutCheckoutLocale) => void
+  setDefaultLocale: (lang: Locale) => void
 }
 
 export interface RevolutCheckout {

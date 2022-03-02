@@ -1,8 +1,8 @@
 export { RevolutCheckoutLoader as default } from './loader'
 export {
-  isValidRevolutCheckoutLocale,
   isRevolutCheckoutError,
   isValidationError,
+  isValidLocale,
 } from './checks'
 export {
   ValidationErrorType,
@@ -12,7 +12,7 @@ export {
   FieldStatus,
   FieldClasses,
   FieldStyles,
-  RevolutCheckoutLocale,
+  Locale,
   RevolutCheckoutCardField,
   RevolutCheckoutInstance,
 } from './types'
