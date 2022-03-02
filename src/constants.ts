@@ -1,3 +1,16 @@
+export const LOCALES = [
+  'en',
+  'nl',
+  'fr',
+  'de',
+  'it',
+  'lt',
+  'pl',
+  'pt',
+  'es',
+  'cs',
+] as const
+
 export const MODE = {
   PRODUCTION: 'prod',
   DEVELOPMENT: 'dev',

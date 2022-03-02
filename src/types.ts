@@ -1,4 +1,4 @@
-import { MODE } from './constants'
+import { MODE, LOCALES } from './constants'
 
 export type Mode = MODE[keyof MODE]
 
@@ -254,16 +254,7 @@ export type CountryCode =
   | 'QA'
   | 'MZ'
 
-export type Locale =
-  | 'en'
-  | 'nl'
-  | 'fr'
-  | 'de'
-  | 'it'
-  | 'lt'
-  | 'pl'
-  | 'pt'
-  | 'es'
+export type Locale = typeof LOCALES[number]
 
 export type ValidationErrorType =
   | 'validation.card.number.incomplete'
