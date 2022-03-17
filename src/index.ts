@@ -15,4 +15,5 @@ export {
   Locale,
   RevolutCheckoutCardField,
   RevolutCheckoutInstance,
+  Mode
 } from './types'
