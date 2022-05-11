@@ -267,6 +267,7 @@ export type ValidationErrorType =
   | 'validation.card.cvv.required'
   | 'validation.card.type.invalid'
   | 'validation.postcode.invalid'
+  | 'validation.postcode.country-invalid'
   | 'validation.postcode.required'
   | 'validation.email.incomplete'
   | 'validation.email.invalid'
