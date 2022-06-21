@@ -4,7 +4,7 @@ import { fireEvent } from '@testing-library/dom'
 afterEach(() => jest.resetModules())
 
 function setup() {
-  const RevolutPayments = require('./index').RevolutPaymentsLoader
+  const RevolutCheckout = require('./index').default
   const script = document.createElement('script')
 
   const MockInstance = jest.fn()
@@ -31,13 +31,13 @@ function setup() {
 
   return {
     script,
-    RevolutPayments,
     MockInstance,
     MockPaymentInstance,
     MockRevolutPayments,
     MockRevolutCheckout,
     TriggerSuccess,
     TriggerError,
+    RevolutPayments: RevolutCheckout.payments,
   }
 }
 
@@ -51,7 +51,10 @@ test(`should load embed script for 'dev'`, async () => {
     TriggerSuccess,
   } = setup()
 
-  const promise = RevolutPayments('MERCHANT_PUBLIC_TOKEN_DEV_XXX', 'dev')
+  const promise = RevolutPayments({
+    mode: 'dev',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
+  })
   const spyLoad = jest.spyOn(script, 'onload')
 
   expect(script).toHaveAttribute('id', 'revolut-payments')
@@ -82,7 +85,10 @@ test(`should load embed script for 'prod'`, async () => {
     TriggerSuccess,
   } = setup()
 
-  const promise = RevolutPayments('MERCHANT_PUBLIC_TOKEN_PROD_XXX', 'prod')
+  const promise = RevolutPayments({
+    mode: 'prod',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
   const spyLoad = jest.spyOn(script, 'onload')
 
   expect(script).toHaveAttribute('id', 'revolut-payments')
@@ -110,10 +116,10 @@ test(`should load embed script for 'sandbox'`, async () => {
     TriggerSuccess,
   } = setup()
 
-  const promise = RevolutPayments(
-    'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
-    'sandbox'
-  )
+  const promise = RevolutPayments({
+    mode: 'sandbox',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
+  })
   const spyLoad = jest.spyOn(script, 'onload')
 
   expect(script).toHaveAttribute('id', 'revolut-payments')
@@ -137,7 +143,7 @@ test(`should load embed script for 'sandbox'`, async () => {
 test('should not request new embed script and use loaded one', async () => {
   const { RevolutPayments, MockRevolutPayments, TriggerSuccess } = setup()
 
-  const promise = RevolutPayments('MERCHANT_PUBLIC_TOKEN_1')
+  const promise = RevolutPayments({ publicToken: 'MERCHANT_PUBLIC_TOKEN_1' })
 
   TriggerSuccess()
 
@@ -161,7 +167,9 @@ test(`should use 'prod' by default`, async () => {
     TriggerSuccess,
   } = setup()
 
-  const promise = RevolutPayments('MERCHANT_PUBLIC_TOKEN_PROD_XXX')
+  const promise = RevolutPayments({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
   const spyLoad = jest.spyOn(script, 'onload')
 
   expect(script).toHaveAttribute('id', 'revolut-payments')
@@ -184,7 +192,9 @@ test.only('should throw error on failed loading', async () => {
   const { RevolutPayments, TriggerError } = setup()
 
   try {
-    const promise = RevolutPayments('MERCHANT_PUBLIC_TOKEN_PROD_XXX')
+    const promise = RevolutPayments({
+      publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+    })
 
     TriggerError()
 

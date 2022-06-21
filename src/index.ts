@@ -1,5 +1,4 @@
 export { RevolutCheckoutLoader as default } from './loader'
-export { RevolutPaymentsLoader } from './paymentsLoader'
 export {
   isRevolutCheckoutError,
   isValidationError,

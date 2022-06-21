@@ -1,5 +1,6 @@
 import { MODE, URLS } from './constants'
-import { RevolutCheckout, RevolutCheckoutInstance, Mode } from './types'
+import { RevolutPaymentsLoader } from './paymentsLoader'
+import { RevolutCheckout, RevolutCheckoutInstance, Mode, Locale } from './types'
 
 let loaded: RevolutCheckout = null
 
@@ -59,3 +60,14 @@ export function RevolutCheckoutLoader(
 }
 
 RevolutCheckoutLoader.mode = MODE.PRODUCTION
+
+type PaymentModuleParams = {
+  locale: Locale
+  mode: Mode
+  publicToken: string
+}
+RevolutCheckoutLoader.payments = ({
+  locale,
+  publicToken,
+  mode = RevolutCheckoutLoader.mode,
+}: PaymentModuleParams) => RevolutPaymentsLoader(publicToken, mode, locale)
