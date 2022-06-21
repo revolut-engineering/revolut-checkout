@@ -475,21 +475,6 @@ export interface PaymentRequestInstance {
   destroy: () => void
 }
 
-export interface PaymentsModulePaymentRequestOptions
-  extends Omit<PaymentRequestOptions, 'token'> {
-  createOrder: () => Promise<{ publicId: string }>
-  amount: string
-  currency: string
-}
-
-export interface PaymentsModulePaymentRequestInstance {
-  mount: (
-    target: HTMLElement,
-    options: PaymentsModulePaymentRequestOptions
-  ) => PaymentRequestInstance
-  destroy: () => void
-}
-
 type CommonPaymentsRevolutPayOptions = {
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
@@ -607,8 +592,6 @@ export interface RevolutCheckoutInstance {
 }
 
 export interface RevolutPaymentsModuleInstance {
-  /** Accept payments via the W3C payment request API */
-  paymentRequest: PaymentsModulePaymentRequestInstance
   /** Accept payments via Revolut pay v2 */
   revolutPay: PaymentsModuleRevolutPayInstance
   /** Manually destroy the instance	 */
