@@ -474,6 +474,109 @@ export interface PaymentRequestInstance {
   /** Manually destroy the payment request if needed */
   destroy: () => void
 }
+
+export interface PaymentsModulePaymentRequestOptions
+  extends Omit<PaymentRequestOptions, 'token'> {
+  createOrder: () => Promise<{ publicId: string }>
+  amount: string
+  currency: string
+}
+
+export interface PaymentsModulePaymentRequestInstance {
+  mount: (
+    target: HTMLElement,
+    options: PaymentsModulePaymentRequestOptions
+  ) => PaymentRequestInstance
+  destroy: () => void
+}
+
+type CommonPaymentsRevolutPayOptions = {
+  billingAddress?: Address
+  buttonStyle?: ButtonStyleOptions
+  validate?: () => Promise<boolean> | boolean
+  createOrder: () => Promise<{ publicId: string }>
+}
+
+type RevolutPayLineItem = {
+  name: string
+  totalAmount: string
+  unitPriceAmount: string
+
+  quantity?: {
+    value: number
+    unit: 'PIECES'
+  }
+  type?:
+    | 'TAX'
+    | 'GIFT'
+    | 'MISC'
+    | 'REFUND'
+    | 'CHARGE'
+    | 'SERVICE'
+    | 'PHYSICAL'
+    | 'ADJUSTMENT'
+  productId?: string
+  productUrl?: string
+  description?: string
+  taxes?: {
+    name: string
+    amount: string
+    type?: 'INCLUDED'
+  }[]
+  imageUrls?: string[]
+  totalTaxAmount?: string
+  totalDiscountAmount?: string
+  discounts?: {
+    name: string
+    type?: 'FIXED'
+    totalAmount?: number
+    appliedAmount?: number
+  }[]
+  metadata?: Record<string, string>
+}
+
+type CreateRevolutPaySessionParams = {
+  currency: string
+  totalAmount: number
+  lineItems?: RevolutPayLineItem[]
+}
+
+type WidgetPaymentsRevolutPayOptions =
+  | (CommonPaymentsRevolutPayOptions & CreateRevolutPaySessionParams)
+  | (CommonPaymentsRevolutPayOptions & { sessionToken: string })
+
+type RevolutPayDropOffState =
+  | 'enter_otp'
+  | 'payment_summary'
+  | 'load_session_data'
+  | 'enter_card_details'
+  | 'verify_user_details'
+  | 'enter_personal_details'
+  | 'enter_shipping_details'
+  | 'revolut_app_push_challenge'
+
+type RevolutPayEvents = {
+  type: 'payment'
+  payload:
+    | {
+        type: 'success'
+      }
+    | { type: 'error'; error: Error }
+    | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
+}
+
+export interface PaymentsModuleRevolutPayInstance {
+  mount: (
+    target: string | HTMLElement,
+    options: WidgetPaymentsRevolutPayOptions
+  ) => void
+  on: (
+    event: RevolutPayEvents['type'],
+    callback: (payload: RevolutPayEvents['payload']) => void
+  ) => void
+  destroy: () => void
+}
+
 export interface WidgetPaymentRequestInstance
   extends PaymentRequestInstance,
     RevolutCheckoutInstance {}
@@ -503,6 +606,25 @@ export interface RevolutCheckoutInstance {
   setDefaultLocale: (lang: Locale) => void
 }
 
+export interface RevolutPaymentsModuleInstance {
+  /** Accept payments via the W3C payment request API */
+  paymentRequest: PaymentsModulePaymentRequestInstance
+  /** Accept payments via Revolut pay v2 */
+  revolutPay: PaymentsModuleRevolutPayInstance
+  /** Manually destroy the instance	 */
+  destroy: () => void
+  /** Controls the language of the text in the widget */
+  setDefaultLocale: (lang: Locale) => void
+}
+
+export interface RevolutPaymentsModuleOptions {
+  publicToken: string
+  locale?: string
+}
+
 export interface RevolutCheckout {
   (token: string): Promise<RevolutCheckoutInstance>
+  payments: (
+    option: RevolutPaymentsModuleOptions
+  ) => RevolutPaymentsModuleInstance
 }

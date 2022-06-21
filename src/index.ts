@@ -1,4 +1,5 @@
 export { RevolutCheckoutLoader as default } from './loader'
+export { RevolutPaymentsLoader } from './paymentsLoader'
 export {
   isRevolutCheckoutError,
   isValidationError,
@@ -15,5 +16,5 @@ export {
   Locale,
   RevolutCheckoutCardField,
   RevolutCheckoutInstance,
-  Mode
+  Mode,
 } from './types'
