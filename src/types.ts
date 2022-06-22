@@ -546,7 +546,7 @@ type RevolutPayEvents = {
     | {
         type: 'success'
       }
-    | { type: 'error'; error: Error }
+    | { type: 'error'; error: RevolutCheckoutError }
     | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
 }
 
