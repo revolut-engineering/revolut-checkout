@@ -63,8 +63,8 @@ RevolutCheckoutLoader.mode = MODE.PRODUCTION
 
 type PaymentModuleParams = {
   locale: Locale
-  mode: Mode
   publicToken: string
+  mode?: Mode
 }
 RevolutCheckoutLoader.payments = ({
   locale,

@@ -479,7 +479,7 @@ type CommonPaymentsRevolutPayOptions = {
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
   validate?: () => Promise<boolean> | boolean
-  createOrder: () => Promise<{ publicId: string }>
+  createOrder: () => { publicId: string } | Promise<{ publicId: string }>
 }
 
 type RevolutPayLineItem = {
@@ -546,7 +546,7 @@ type RevolutPayEvents = {
     | {
         type: 'success'
       }
-    | { type: 'error'; error: Error }
+    | { type: 'error'; error: RevolutCheckoutError }
     | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
 }
 
