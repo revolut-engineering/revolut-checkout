@@ -288,6 +288,8 @@ export type RevolutCheckoutErrorType =
   | 'error.deactivated-merchant'
   | 'error.invalid-postcode'
   | 'error.invalid-email'
+  | 'error.invalid-name'
+  | 'error.invalid-address'
   | 'error.do-not-honour'
   | 'error.insufficient-funds'
   | 'error.3ds-failed'
