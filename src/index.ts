@@ -17,3 +17,9 @@ export {
   RevolutCheckoutInstance,
   Mode,
 } from './types'
+
+export {
+  getRevolutPayOrderIdURLParam,
+  getRevolutPaySuccessURLParam,
+  getRevolutPayFailureURLParam,
+} from './helpers'
