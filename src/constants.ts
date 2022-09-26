@@ -9,7 +9,7 @@ export const LOCALES = [
   'pt',
   'es',
   'cs',
-  'hu'
+  'hu',
 ] as const
 
 export const MODE = {
@@ -27,3 +27,7 @@ export const URLS = {
 } as const
 
 export type URLS = typeof URLS
+
+export const REVOLUT_PAY_ORDER_ID_URL_PARAMETER = '_rp_oid'
+export const REVOLUT_PAY_SUCCESS_REDIRECT_URL_PARAMETER = '_rp_s'
+export const REVOLUT_PAY_FAILURE_REDIRECT_URL_PARAMETER = '_rp_fr'
