@@ -471,8 +471,10 @@ export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
 export interface PaymentRequestInstance {
   /** Render the payment request button */
   render: () => Promise<void>
-  /** Check if user can make payment via a supported payment request method  */
-  canMakePayment: () => Promise<boolean>
+  /** Check if user can make payment via a supported payment request method. 
+    * Returns a promise with the decided method or null if cannot make payment.
+    */
+  canMakePayment: () => Promise<'applePay' | 'googlePay' | 'basicCard' | null>
   /** Manually destroy the payment request if needed */
   destroy: () => void
 }
