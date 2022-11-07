@@ -352,6 +352,14 @@ export type ButtonStyleOptions = {
   action?: 'donate' | 'pay' | 'subscribe' | 'buy'
 }
 
+export type PrefilledPersonalDetails = {
+  phoneNumber?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  dateOfBirth?: string
+}
+
 export type SubmitMeta = CustomerDetails &
   Pick<CommonOptions, 'savePaymentMethodFor'>
 
@@ -446,6 +454,8 @@ export interface RevolutPayOptions extends CommonOptions {
   email?: string
   /** Styles of the RevolutPay button */
   buttonStyle?: ButtonStyleOptions
+  /** Prefiiled person details of user. Only valid details are prefilled. */
+  prefilledPersonalDetails?: PrefilledPersonalDetails
   /** Callback when user clicks on the RevolutPay button */
   onClick?: () => void
 }
