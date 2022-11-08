@@ -352,14 +352,6 @@ export type ButtonStyleOptions = {
   action?: 'donate' | 'pay' | 'subscribe' | 'buy'
 }
 
-export type PrefilledCustomerDetails = {
-  phone?: string
-  firstName?: string
-  lastName?: string
-  email?: string
-  dateOfBirth?: string
-}
-
 export type SubmitMeta = CustomerDetails &
   Pick<CommonOptions, 'savePaymentMethodFor'>
 
@@ -379,6 +371,8 @@ export interface CustomerDetails {
   email?: string
   /** Customer's phone number if available */
   phone?: string
+  /** Customer's date of birth. Currently used only in RevolutPay. */
+  dateOfBirth?: string
   /** Contains customer's billing address — required if not set on order via API */
   billingAddress?: Address
   /** The same object as billingAddress object, however, it is only displayed in the order details on the [merchant dashboard](https://business.revolut.com/merchant) */
@@ -454,8 +448,8 @@ export interface RevolutPayOptions extends CommonOptions {
   email?: string
   /** Styles of the RevolutPay button */
   buttonStyle?: ButtonStyleOptions
-  /** Prefiiled customer details. Only valid details are prefilled. */
-  customer?: PrefilledCustomerDetails
+  /** Prefilled customer details. Only valid details are prefilled. */
+  customer?: CustomerDetails
   /** Callback when user clicks on the RevolutPay button */
   onClick?: () => void
 }
