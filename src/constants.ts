@@ -3,13 +3,15 @@ export const LOCALES = [
   'nl',
   'fr',
   'de',
+  'cs',
   'it',
   'lt',
   'pl',
   'pt',
   'es',
-  'cs',
   'hu',
+  'sk',
+  'ja',
 ] as const
 
 export const MODE = {
