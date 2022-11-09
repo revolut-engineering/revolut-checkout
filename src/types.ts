@@ -371,7 +371,7 @@ export interface CustomerDetails {
   email?: string
   /** Customer's phone number if available */
   phone?: string
-  /** Customer's date of birth. Currently used only in RevolutPay. */
+  /** Customer's date of birth in the format DD/MM/YY. Currently used only in Revolut Pay. */
   dateOfBirth?: string
   /** Contains customer's billing address — required if not set on order via API */
   billingAddress?: Address
