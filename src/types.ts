@@ -611,6 +611,16 @@ export interface RevolutPaymentsModuleInstance {
   destroy: () => void
   /** Controls the language of the text in the widget */
   setDefaultLocale: (lang: Locale) => void
+  /** Poll and react to the status of an order payment */
+  pollPaymentState: (
+    orderToken: string,
+    callbacks: {
+      onSuccess: () => void
+      onError: (error: RevolutCheckoutError) => void
+      /** Specifically handle poll errors e.g., network connection issues. Return a value (nullable) to stop polling completely */
+      onPollError?: (error: Error) => void
+    }
+  ) => () => void
 }
 
 export interface RevolutPaymentsModuleOptions {
