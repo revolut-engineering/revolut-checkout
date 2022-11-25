@@ -618,7 +618,7 @@ export interface RevolutPaymentsModuleInstance {
       onSuccess: () => void
       onError: (error: RevolutCheckoutError) => void
       /** Specifically handle poll errors e.g., network connection issues. Return a value (nullable) to stop polling completely */
-      onPollError?: (error: Error) => void
+      onPollError?: (error: RevolutCheckoutError) => void
     }
   ) => () => void
 }
