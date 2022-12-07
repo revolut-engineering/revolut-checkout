@@ -491,7 +491,8 @@ export interface PaymentRequestInstance {
 type CommonPaymentsRevolutPayOptions = {
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
-  validate?: () => Promise<boolean> | boolean
+  /** Validation promise to be resolved before a user can make payments. Throw an error otherwise  */
+  validate?: () => Promise<void>
   createOrder: () => Promise<{ publicId: string }>
 }
 
