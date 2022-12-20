@@ -608,6 +608,10 @@ export interface RevolutCheckoutInstance {
   destroy: () => void
   /** Controls the language of the text in the widget */
   setDefaultLocale: (lang: Locale) => void
+  /** The payments module returned as part of the checkout instance  */
+  payments: (
+    option: RevolutPaymentsModuleOptions
+  ) => RevolutPaymentsModuleInstance
 }
 
 export interface RevolutPaymentsModuleInstance {
