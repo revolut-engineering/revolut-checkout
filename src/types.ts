@@ -554,15 +554,20 @@ type RevolutPayDropOffState =
   | 'enter_shipping_details'
   | 'revolut_app_push_challenge'
 
-type RevolutPayEvents = {
-  type: 'payment'
-  payload:
-    | {
-        type: 'success'
-      }
-    | { type: 'error'; error: RevolutCheckoutError }
-    | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
-}
+type RevolutPayEvents =
+  | {
+      type: 'payment'
+      payload:
+        | {
+            type: 'success'
+          }
+        | { type: 'error'; error: RevolutCheckoutError }
+        | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
+    }
+  | {
+      type: 'click'
+      payload: null
+    }
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
