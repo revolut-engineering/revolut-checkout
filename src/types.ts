@@ -554,24 +554,31 @@ type RevolutPayDropOffState =
   | 'enter_shipping_details'
   | 'revolut_app_push_challenge'
 
-type RevolutPayEvents = {
-  type: 'payment'
-  payload:
-    | {
-        type: 'success'
-      }
-    | { type: 'error'; error: RevolutCheckoutError }
-    | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
-}
+type RevolutPayEvents =
+  | {
+      type: 'payment'
+      payload:
+        | {
+            type: 'success'
+          }
+        | { type: 'error'; error: RevolutCheckoutError }
+        | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
+    }
+  | {
+      type: 'click'
+      payload: null
+    }
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
     target: string | HTMLElement,
     options: WidgetPaymentsRevolutPayOptions
   ) => void
-  on: (
-    event: RevolutPayEvents['type'],
-    callback: (payload: RevolutPayEvents['payload']) => void
+  on: <T extends RevolutPayEvents['type']>(
+    event: T,
+    callback: (
+      payload: Extract<RevolutPayEvents, { type: T }>['payload']
+    ) => void
   ) => void
   destroy: () => void
 }
@@ -603,6 +610,10 @@ export interface RevolutCheckoutInstance {
   destroy: () => void
   /** Controls the language of the text in the widget */
   setDefaultLocale: (lang: Locale) => void
+  /** The payments module returned as part of the checkout instance  */
+  payments: (
+    option: RevolutPaymentsModuleOptions
+  ) => RevolutPaymentsModuleInstance
 }
 
 export interface RevolutPaymentsModuleInstance {
