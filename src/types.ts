@@ -574,9 +574,11 @@ export interface PaymentsModuleRevolutPayInstance {
     target: string | HTMLElement,
     options: WidgetPaymentsRevolutPayOptions
   ) => void
-  on: (
-    event: RevolutPayEvents['type'],
-    callback: (payload: RevolutPayEvents['payload']) => void
+  on: <T extends RevolutPayEvents['type']>(
+    event: T,
+    callback: (
+      payload: Extract<RevolutPayEvents, { type: T }>['payload']
+    ) => void
   ) => void
   destroy: () => void
 }
