@@ -344,13 +344,19 @@ export type FieldStatus = Omit<StatusRecord<boolean>, 'default'>
 export type FieldStyles = Partial<StatusRecord<Partial<CSSStyleDeclaration>>>
 export type FieldClasses = Partial<StatusRecord<string>>
 
+type RevolutPayButtonStyleOptions = {
+  cashback: boolean
+  cashbackAmount: 1000 | 2500
+  cashbackCurrency: 'USD' | 'GBP' | 'EUR'
+}
+
 export type ButtonStyleOptions = {
   height?: string
   size?: 'large' | 'small'
   radius?: 'none' | 'small' | 'large'
   variant?: 'dark' | 'light' | 'light-outlined'
   action?: 'donate' | 'pay' | 'subscribe' | 'buy'
-}
+} & Partial<RevolutPayButtonStyleOptions>
 
 export type SubmitMeta = CustomerDetails &
   Pick<CommonOptions, 'savePaymentMethodFor'>
@@ -489,10 +495,22 @@ export interface PaymentRequestInstance {
 }
 
 type CommonPaymentsRevolutPayOptions = {
+  /** Decide whether to use fast checkout or not  **/
+  requestShipping?: boolean
+  /** Alternative API to payment events */
+  redirectUrls?: {
+    success: string
+    failure: string
+    cancel: string
+  }
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
-  /** Validation promise to be resolved before a user can make payments. Throw an error otherwise  */
-  validate?: () => Promise<void>
+  /** Prefill your customer details within the Revolut pay popup */
+  customer?: CustomerDetails
+  /** Validation promise to be resolved before a user can make payments.
+   * Throw an error and the error message will be displayed in the Revolut pay popup  */
+  validate?: () => Promise<boolean> | boolean
+  /** A promise to create a Revolut order at a later time within the Revolut pay flow  */
   createOrder: () => Promise<{ publicId: string }>
 }
 
