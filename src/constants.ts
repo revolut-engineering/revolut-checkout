@@ -12,6 +12,7 @@ export const LOCALES = [
   'hu',
   'sk',
   'ja',
+  'sv',
 ] as const
 
 export const MODE = {
