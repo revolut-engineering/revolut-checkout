@@ -346,7 +346,7 @@ export type FieldClasses = Partial<StatusRecord<string>>
 
 type RevolutPayButtonStyleOptions = {
   cashback: boolean
-  cashbackAmount: 1000 | 2500
+  cashbackAmount: 1000 | 2000
   cashbackCurrency: 'USD' | 'GBP' | 'EUR'
 }
 
