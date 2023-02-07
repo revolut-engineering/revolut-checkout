@@ -452,6 +452,14 @@ export interface CardFieldOptions extends PopupOptions {
   onStatusChange?: (status: FieldStatus) => void
 }
 
+export interface RevolutPayPopupOptions {
+  /** 
+   * Whether the popup should close when the overlay is clicked.
+   * Defaults to false
+   */
+  closeOnOverlayClick?: boolean
+}
+
 export interface RevolutPayOptions extends CommonOptions {
   /** Empty element inside payment page */
   target: HTMLElement
@@ -461,6 +469,8 @@ export interface RevolutPayOptions extends CommonOptions {
   email?: string
   /** Styles of the RevolutPay button */
   buttonStyle?: ButtonStyleOptions
+  /** Configuration options of the RevolutPay popup */
+  popupOptions?: RevolutPayPopupOptions
   /** Prefilled customer details. Only valid details are prefilled. */
   customer?: CustomerDetails
   /** Callback when user clicks on the RevolutPay button */
