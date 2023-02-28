@@ -13,6 +13,9 @@ export const LOCALES = [
   'sk',
   'ja',
   'sv',
+  'bg',
+  'ro',
+  'el',
 ] as const
 
 export const MODE = {
