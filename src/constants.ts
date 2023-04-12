@@ -16,6 +16,7 @@ export const LOCALES = [
   'bg',
   'ro',
   'el',
+  'hr',
 ] as const
 
 export const MODE = {
