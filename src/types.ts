@@ -512,6 +512,7 @@ type CommonPaymentsRevolutPayOptions = {
   validate?: () => Promise<boolean> | boolean
   /** A promise to create a Revolut order at a later time within the Revolut pay flow  */
   createOrder: () => Promise<{ publicId: string }>
+  __features?: {}
 }
 
 type RevolutPayLineItem = {
