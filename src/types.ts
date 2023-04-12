@@ -558,7 +558,7 @@ type CreateRevolutPaySessionParams = {
   lineItems?: RevolutPayLineItem[]
 }
 
-type WidgetPaymentsRevolutPayOptions =
+export type WidgetPaymentsRevolutPayOptions =
   | (CommonPaymentsRevolutPayOptions & CreateRevolutPaySessionParams)
   | (CommonPaymentsRevolutPayOptions & { sessionToken: string })
 
@@ -572,7 +572,7 @@ type RevolutPayDropOffState =
   | 'enter_shipping_details'
   | 'revolut_app_push_challenge'
 
-type RevolutPayEvents =
+export type RevolutPayEvents =
   | {
       type: 'payment'
       payload:
@@ -587,6 +587,11 @@ type RevolutPayEvents =
       payload: null
     }
 
+export type RevolutPayEventPayload<T> = Extract<
+  RevolutPayEvents,
+  { type: T }
+>['payload']
+
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
     target: string | HTMLElement,
@@ -594,9 +599,7 @@ export interface PaymentsModuleRevolutPayInstance {
   ) => void
   on: <T extends RevolutPayEvents['type']>(
     event: T,
-    callback: (
-      payload: Extract<RevolutPayEvents, { type: T }>['payload']
-    ) => void
+    callback: (payload: RevolutPayEventPayload<T>) => void
   ) => void
   destroy: () => void
 }

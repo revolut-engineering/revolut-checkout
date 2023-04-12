@@ -15,7 +15,11 @@ export {
   Locale,
   RevolutCheckoutCardField,
   RevolutCheckoutInstance,
+  RevolutPayEvents,
+  RevolutPayEventPayload,
   Mode,
+  WidgetPaymentsRevolutPayOptions,
+  WidgetPaymentRequestInstance,
 } from './types'
 
 export {
