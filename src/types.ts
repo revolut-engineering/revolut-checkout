@@ -513,6 +513,7 @@ type CommonPaymentsRevolutPayOptions = {
   /** A promise to create a Revolut order at a later time within the Revolut pay flow  */
   createOrder: () => Promise<{ publicId: string }>
   __features?: Record<string, any>
+  __metadata?: Record<string, any>
 }
 
 type RevolutPayLineItem = {
