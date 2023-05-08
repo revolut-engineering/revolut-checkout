@@ -1,5 +1,6 @@
 export const LOCALES = [
   'en',
+  'en-US',
   'nl',
   'fr',
   'de',
