@@ -394,7 +394,7 @@ export interface CustomerDetails {
 
 export interface CommonOptions {
   /** Controls the language of the text in the widget method */
-  locale?: Locale
+  locale?: Locale | 'auto'
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: () => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
@@ -631,7 +631,7 @@ export interface RevolutCheckoutInstance {
   /** Manually destroy popup or card field if needed	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
-  setDefaultLocale: (lang: Locale) => void
+  setDefaultLocale: (lang: Locale | 'auto') => void
   /** The payments module returned as part of the checkout instance  */
   payments: (
     option: RevolutPaymentsModuleOptions
@@ -644,7 +644,7 @@ export interface RevolutPaymentsModuleInstance {
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
-  setDefaultLocale: (lang: Locale) => void
+  setDefaultLocale: (lang: Locale | 'auto') => void
   /** Poll and react to the status of an order payment */
   pollPaymentState: (
     orderToken: string,
@@ -659,7 +659,7 @@ export interface RevolutPaymentsModuleInstance {
 
 export interface RevolutPaymentsModuleOptions {
   publicToken: string
-  locale?: string
+  locale?: string | 'auto'
 }
 
 export interface RevolutCheckout {

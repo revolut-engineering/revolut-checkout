@@ -62,7 +62,7 @@ export function RevolutCheckoutLoader(
 RevolutCheckoutLoader.mode = MODE.PRODUCTION
 
 type PaymentModuleParams = {
-  locale: Locale
+  locale: Locale | 'auto'
   publicToken: string
   mode?: Mode
 }
