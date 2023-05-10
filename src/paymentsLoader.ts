@@ -11,7 +11,7 @@ let loadedPaymentInstance: RevolutCheckout['payments'] = null
 export function RevolutPaymentsLoader(
   token: string,
   mode: Mode = RevolutPaymentsLoader.mode,
-  locale?: Locale
+  locale?: Locale | 'auto'
 ): Promise<RevolutPaymentsModuleInstance> {
   if (loadedPaymentInstance) {
     const instance = loadedPaymentInstance({ publicToken: token, locale })
