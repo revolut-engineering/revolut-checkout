@@ -37,10 +37,10 @@ export function RevolutCheckoutLoader(
   document.head.appendChild(script)
 
   return new Promise((resolve, reject) => {
-    function handleError() {
+    function handleError(reason: string) {
       document.head.removeChild(script)
 
-      reject(new Error(`'RevolutCheckout' is failed to load`))
+      reject(new Error(`'RevolutCheckout' failed to load: ${reason}`))
     }
 
     function handleLoad() {
@@ -50,12 +50,12 @@ export function RevolutCheckoutLoader(
         loaded = RevolutCheckout
         delete window.RevolutCheckout
       } else {
-        handleError()
+        handleError('RevolutCheckout is not a function')
       }
     }
 
     script.onload = handleLoad
-    script.onerror = handleError
+    script.onerror = () => handleError('Network error encountered')
   })
 }
 
