@@ -163,6 +163,29 @@ test('should throw error on failed loading', async () => {
 
     await promise
   } catch (error) {
-    expect(error.message).toBe(`'RevolutCheckout' is failed to load`)
+    expect(error.message).toBe(
+      `'RevolutCheckout' failed to load: Network error encountered`
+    )
   }
+})
+
+test('should throw error if RevolutCheckout is missing', async () => {
+  const { script, RevolutCheckout, TriggerSuccess } = setup()
+
+  const promise = RevolutCheckout('PROD_XXX')
+
+  expect(script).toHaveAttribute('id', 'revolut-checkout')
+  expect(script).toHaveAttribute('src', 'https://merchant.revolut.com/embed.js')
+
+  TriggerSuccess.mockImplementationOnce(() => {
+    // RevolutCheckout is not assigned to window
+    fireEvent.load(script)
+  })
+  TriggerSuccess()
+
+  await expect(promise).rejects.toEqual(
+    new Error(
+      `'RevolutCheckout' failed to load: RevolutCheckout is not a function`
+    )
+  )
 })

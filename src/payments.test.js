@@ -152,7 +152,7 @@ test('should not request new embed script and use loaded one', async () => {
     publicToken: 'MERCHANT_PUBLIC_TOKEN_1',
   })
 
-  await RevolutPayments('MERCHANT_PUBLIC_TOKEN_2')
+  await RevolutPayments({ publicToken: 'MERCHANT_PUBLIC_TOKEN_2' })
   expect(MockRevolutPayments).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_2',
   })
@@ -186,7 +186,7 @@ test(`should use 'prod' by default`, async () => {
   })
 })
 
-test.only('should throw error on failed loading', async () => {
+test('should throw error on failed loading', async () => {
   expect.assertions(1)
 
   const { RevolutPayments, TriggerError } = setup()
@@ -200,6 +200,31 @@ test.only('should throw error on failed loading', async () => {
 
     await promise
   } catch (error) {
-    expect(error.message).toBe(`'RevolutPayments' failed to load`)
+    expect(error.message).toBe(
+      `'RevolutPayments' failed to load: Network error encountered`
+    )
   }
+})
+
+test('should throw error if RevolutCheckout is missing', async () => {
+  const { script, RevolutPayments, TriggerSuccess } = setup()
+
+  const promise = RevolutPayments({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
+
+  expect(script).toHaveAttribute('id', 'revolut-payments')
+  expect(script).toHaveAttribute('src', 'https://merchant.revolut.com/embed.js')
+
+  TriggerSuccess.mockImplementationOnce(() => {
+    // RevolutCheckout is not assigned to window
+    fireEvent.load(script)
+  })
+  TriggerSuccess()
+
+  await expect(promise).rejects.toEqual(
+    new Error(
+      `'RevolutPayments' failed to load: RevolutCheckout is not a function`
+    )
+  )
 })
