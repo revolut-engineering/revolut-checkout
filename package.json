@@ -76,7 +76,9 @@
       "no-unused-vars": 0,
       "no-undef": 0,
       "prettier/prettier": 2,
-      "no-shadow": 2
+      "no-shadow": 2,
+      "jest/no-disabled-tests": 1,
+      "jest/no-focused-tests": 2
     }
   },
   "jest": {
