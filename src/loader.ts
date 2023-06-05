@@ -2,6 +2,7 @@ import { MODE, URLS } from './constants'
 import { RevolutPaymentsLoader } from './paymentsLoader'
 import { RevolutCheckout, RevolutCheckoutInstance, Mode, Locale } from './types'
 import { loadModule } from './utils'
+import { RevolutUpsellLoader } from './upsellLoader'
 
 let loaded: RevolutCheckout = null
 
@@ -26,7 +27,7 @@ export function RevolutCheckoutLoader(
   mode: Mode = RevolutCheckoutLoader.mode
 ): Promise<RevolutCheckoutInstance> {
   if (loaded) {
-    return loaded(token)
+    return Promise.resolve(loaded(token))
   }
 
   return loadModule({
@@ -60,3 +61,14 @@ RevolutCheckoutLoader.payments = ({
   publicToken,
   mode = RevolutCheckoutLoader.mode,
 }: PaymentModuleParams) => RevolutPaymentsLoader(publicToken, mode, locale)
+
+type UpsellModuleParams = {
+  locale: Locale | 'auto'
+  publicToken: string
+  mode?: Mode
+}
+RevolutCheckoutLoader.upsell = ({
+  locale,
+  publicToken,
+  mode = RevolutCheckoutLoader.mode,
+}: UpsellModuleParams) => RevolutUpsellLoader(publicToken, mode, locale)
