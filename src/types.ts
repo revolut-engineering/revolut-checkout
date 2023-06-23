@@ -453,7 +453,7 @@ export interface CardFieldOptions extends PopupOptions {
 }
 
 export interface RevolutPayPopupOptions {
-  /** 
+  /**
    * Whether the popup should close when the overlay is clicked.
    * Defaults to true
    */
