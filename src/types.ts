@@ -636,6 +636,8 @@ export interface RevolutCheckoutInstance {
   payments: (
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
+  /** The upsell SDK module */
+  upsell: (option: RevolutUpsellModuleOptions) => RevolutPaymentsModuleInstance
 }
 
 export interface RevolutPaymentsModuleInstance {
@@ -662,9 +664,36 @@ export interface RevolutPaymentsModuleOptions {
   locale?: string | 'auto'
 }
 
+export interface RevolutUpsellModuleInstance {
+  /** Card gateway upsell banner */
+  cardGatewayBanner: UpsellModuleCardGatewayBannerInstance
+  /** Manually destroy the instance	 */
+  destroy: () => void
+  /** Controls the language of the text in the widget */
+  setDefaultLocale: (lang: Locale | 'auto') => void
+}
+
+export interface UpsellModuleCardGatewayBannerInstance {
+  mount: (
+    target: string | HTMLElement,
+    options: WidgetUpsellCardGatewayBannerOptions
+  ) => void
+  destroy: () => void
+}
+
+export interface WidgetUpsellCardGatewayBannerOptions {
+  orderToken: string
+}
+
+export interface RevolutUpsellModuleOptions {
+  publicToken: string
+  locale?: string | 'auto'
+}
+
 export interface RevolutCheckout {
-  (token: string): Promise<RevolutCheckoutInstance>
+  (token: string): RevolutCheckoutInstance
   payments: (
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
+  upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }

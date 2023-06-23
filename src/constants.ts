@@ -33,8 +33,14 @@ export const URLS = {
   [MODE.PRODUCTION]: 'https://merchant.revolut.com/embed.js',
   [MODE.DEVELOPMENT]: 'https://merchant.revolut.codes/embed.js',
 } as const
-
 export type URLS = typeof URLS
+
+export const UPSELL_URLS = {
+  [MODE.SANDBOX]: 'https://sandbox-merchant.revolut.com/upsell/embed.js',
+  [MODE.PRODUCTION]: 'https://merchant.revolut.com/upsell/embed.js',
+  [MODE.DEVELOPMENT]: 'https://merchant.revolut.codes/upsell/embed.js',
+} as const
+export type UPSELL_URLS = typeof UPSELL_URLS
 
 export const REVOLUT_PAY_ORDER_ID_URL_PARAMETER = '_rp_oid'
 export const REVOLUT_PAY_SUCCESS_REDIRECT_URL_PARAMETER = '_rp_s'

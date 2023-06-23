@@ -5,6 +5,7 @@ import {
   RevolutCheckout,
   RevolutPaymentsModuleInstance,
 } from './types'
+import { loadModule } from './utils'
 
 let loadedPaymentInstance: RevolutCheckout['payments'] = null
 
@@ -18,34 +19,22 @@ export function RevolutPaymentsLoader(
     return Promise.resolve(instance)
   }
 
-  const script = document.createElement('script')
+  return loadModule({
+    src: URLS[mode],
+    id: 'revolut-payments',
+    name: 'RevolutPayments',
+  }).then((scriptElement) => {
+    if (typeof RevolutCheckout === 'function') {
+      loadedPaymentInstance = RevolutCheckout.payments
+      delete window.RevolutCheckout
 
-  script.id = 'revolut-payments'
-  script.src = URLS[mode]
-  script.async = true
-
-  document.head.appendChild(script)
-
-  return new Promise((resolve, reject) => {
-    function handleError(reason: string) {
-      document.head.removeChild(script)
-
-      reject(new Error(`'RevolutPayments' failed to load: ${reason}`))
+      return loadedPaymentInstance({ publicToken: token, locale })
+    } else {
+      document.head.removeChild(scriptElement)
+      throw new Error(
+        `'RevolutPayments' failed to load: RevolutCheckout is not a function`
+      )
     }
-
-    function handleLoad() {
-      if (typeof RevolutCheckout === 'function') {
-        resolve(RevolutCheckout.payments({ publicToken: token, locale }))
-
-        loadedPaymentInstance = RevolutCheckout.payments
-        delete window.RevolutCheckout
-      } else {
-        handleError('RevolutCheckout is not a function')
-      }
-    }
-
-    script.onload = handleLoad
-    script.onerror = () => handleError('Network error encountered')
   })
 }
 

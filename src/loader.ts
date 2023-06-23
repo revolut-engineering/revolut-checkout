@@ -1,6 +1,8 @@
 import { MODE, URLS } from './constants'
 import { RevolutPaymentsLoader } from './paymentsLoader'
 import { RevolutCheckout, RevolutCheckoutInstance, Mode, Locale } from './types'
+import { loadModule } from './utils'
+import { RevolutUpsellLoader } from './upsellLoader'
 
 let loaded: RevolutCheckout = null
 
@@ -25,37 +27,25 @@ export function RevolutCheckoutLoader(
   mode: Mode = RevolutCheckoutLoader.mode
 ): Promise<RevolutCheckoutInstance> {
   if (loaded) {
-    return loaded(token)
+    return Promise.resolve(loaded(token))
   }
 
-  const script = document.createElement('script')
+  return loadModule({
+    src: URLS[mode],
+    id: 'revolut-checkout',
+    name: 'RevolutCheckout',
+  }).then((scriptElement) => {
+    if (typeof RevolutCheckout === 'function') {
+      loaded = RevolutCheckout
+      delete window.RevolutCheckout
 
-  script.id = 'revolut-checkout'
-  script.src = URLS[mode]
-  script.async = true
-
-  document.head.appendChild(script)
-
-  return new Promise((resolve, reject) => {
-    function handleError(reason: string) {
-      document.head.removeChild(script)
-
-      reject(new Error(`'RevolutCheckout' failed to load: ${reason}`))
+      return loaded(token)
+    } else {
+      document.head.removeChild(scriptElement)
+      throw new Error(
+        `'RevolutCheckout' failed to load: RevolutCheckout is not a function`
+      )
     }
-
-    function handleLoad() {
-      if (typeof RevolutCheckout === 'function') {
-        resolve(RevolutCheckout(token))
-
-        loaded = RevolutCheckout
-        delete window.RevolutCheckout
-      } else {
-        handleError('RevolutCheckout is not a function')
-      }
-    }
-
-    script.onload = handleLoad
-    script.onerror = () => handleError('Network error encountered')
   })
 }
 
@@ -71,3 +61,14 @@ RevolutCheckoutLoader.payments = ({
   publicToken,
   mode = RevolutCheckoutLoader.mode,
 }: PaymentModuleParams) => RevolutPaymentsLoader(publicToken, mode, locale)
+
+type UpsellModuleParams = {
+  locale: Locale | 'auto'
+  publicToken: string
+  mode?: Mode
+}
+RevolutCheckoutLoader.upsell = ({
+  locale,
+  publicToken,
+  mode = RevolutCheckoutLoader.mode,
+}: UpsellModuleParams) => RevolutUpsellLoader(publicToken, mode, locale)
