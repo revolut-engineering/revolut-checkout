@@ -1,11 +1,19 @@
 import '@testing-library/jest-dom'
 import { fireEvent } from '@testing-library/dom'
+import {
+  triggerScriptOnLoad,
+  triggerScriptOnError,
+  settleVersionScript,
+} from './testing'
 
-afterEach(() => jest.resetModules())
+afterEach(() => {
+  jest.resetModules()
+
+  document.querySelectorAll('script').forEach((el) => el.remove())
+})
 
 function setup() {
   const RevolutCheckout = require('./index').default
-  const script = document.createElement('script')
 
   const MockInstance = jest.fn()
   const MockRevolutCheckout = jest.fn(() => MockInstance)
@@ -13,57 +21,84 @@ function setup() {
   const MockPaymentInstance = jest.fn()
   const MockRevolutPayments = jest.fn(() => MockPaymentInstance)
 
-  const TriggerSuccess = jest.fn(() => {
-    setTimeout(() => {
-      window.RevolutCheckout = MockRevolutCheckout
-      window.RevolutCheckout.payments = MockRevolutPayments
-      fireEvent.load(script)
-    })
-  })
+  const TriggerSuccessEmbed = jest.fn(
+    () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          window.RevolutCheckout = MockRevolutCheckout
+          window.RevolutCheckout.payments = MockRevolutPayments
+          triggerScriptOnLoad('embed.js')
+          resolve()
+        })
+      })
+  )
 
-  const TriggerError = jest.fn(() => {
-    setTimeout(() => {
-      fireEvent.error(script)
-    })
-  })
+  const TriggerErrorEmbed = jest.fn(
+    () =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          triggerScriptOnError('embed.js')
+          resolve()
+        })
+      })
+  )
 
-  jest.spyOn(document, 'createElement').mockImplementationOnce(() => script)
+  const TriggerSuccessVersion = (version) =>
+    settleVersionScript(() => {
+      window.__REV_PAY_VERSION__ = version
+      triggerScriptOnLoad('version.js')
+    }, version)
+
+  const TriggerErrorVersion = () =>
+    settleVersionScript(() => {
+      triggerScriptOnError('version.js')
+    })
 
   return {
-    script,
     MockInstance,
     MockPaymentInstance,
     MockRevolutPayments,
     MockRevolutCheckout,
-    TriggerSuccess,
-    TriggerError,
+    TriggerSuccessEmbed,
+    TriggerErrorEmbed,
+    TriggerSuccessVersion,
+    TriggerErrorVersion,
     RevolutPayments: RevolutCheckout.payments,
   }
 }
 
 test(`should load embed script for 'dev'`, async () => {
   const {
-    script,
     RevolutPayments,
     MockRevolutCheckout,
     MockPaymentInstance,
     MockRevolutPayments,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutPayments({
     mode: 'dev',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-payments')
-  expect(script).toHaveAttribute(
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.codes/embed.js'
+    'https://merchant.revolut.codes/version.js'
   )
 
-  TriggerSuccess()
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.codes/embed.js?version=abc12345'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -77,24 +112,36 @@ test(`should load embed script for 'dev'`, async () => {
 
 test(`should load embed script for 'prod'`, async () => {
   const {
-    script,
     RevolutPayments,
     MockPaymentInstance,
     MockRevolutCheckout,
     MockRevolutPayments,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutPayments({
     mode: 'prod',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-payments')
-  expect(script).toHaveAttribute('src', 'https://merchant.revolut.com/embed.js')
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/version.js'
+  )
 
-  TriggerSuccess()
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/embed.js?version=abc12345'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -108,27 +155,36 @@ test(`should load embed script for 'prod'`, async () => {
 
 test(`should load embed script for 'sandbox'`, async () => {
   const {
-    script,
     RevolutPayments,
     MockRevolutCheckout,
     MockPaymentInstance,
     MockRevolutPayments,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutPayments({
     mode: 'sandbox',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-payments')
-  expect(script).toHaveAttribute(
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
     'src',
-    'https://sandbox-merchant.revolut.com/embed.js'
+    'https://sandbox-merchant.revolut.com/version.js'
   )
 
-  TriggerSuccess()
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://sandbox-merchant.revolut.com/embed.js?version=abc12345'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -141,11 +197,17 @@ test(`should load embed script for 'sandbox'`, async () => {
 })
 
 test('should not request new embed script and use loaded one', async () => {
-  const { RevolutPayments, MockRevolutPayments, TriggerSuccess } = setup()
+  const {
+    RevolutPayments,
+    MockRevolutPayments,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
+  } = setup()
 
   const promise = RevolutPayments({ publicToken: 'MERCHANT_PUBLIC_TOKEN_1' })
 
-  TriggerSuccess()
+  await TriggerSuccessVersion('')
+  await TriggerSuccessEmbed()
 
   await promise
   expect(MockRevolutPayments).toHaveBeenCalledWith({
@@ -160,22 +222,68 @@ test('should not request new embed script and use loaded one', async () => {
 
 test(`should use 'prod' by default`, async () => {
   const {
-    script,
     RevolutPayments,
     MockPaymentInstance,
     MockRevolutPayments,
-    TriggerSuccess,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
   } = setup()
 
   const promise = RevolutPayments({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-payments')
-  expect(script).toHaveAttribute('src', 'https://merchant.revolut.com/embed.js')
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/version.js'
+  )
 
-  TriggerSuccess()
+  await TriggerSuccessVersion('')
+
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/embed.js'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
+
+  const instance = await promise
+
+  expect(spyLoad).toHaveBeenCalled()
+  expect(instance).toBe(MockPaymentInstance)
+  expect(MockRevolutPayments).toHaveBeenCalledWith({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
+})
+
+test('should load embed script without version parameter if version script fails to load', async () => {
+  const {
+    RevolutPayments,
+    MockPaymentInstance,
+    MockRevolutPayments,
+    TriggerErrorVersion,
+    TriggerSuccessEmbed,
+  } = setup()
+
+  const promise = RevolutPayments({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
+
+  await TriggerErrorVersion()
+
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/embed.js'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -189,14 +297,15 @@ test(`should use 'prod' by default`, async () => {
 test('should throw error on failed loading', async () => {
   expect.assertions(1)
 
-  const { RevolutPayments, TriggerError } = setup()
+  const { RevolutPayments, TriggerSuccessVersion, TriggerErrorEmbed } = setup()
 
   try {
     const promise = RevolutPayments({
       publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
     })
 
-    TriggerError()
+    await TriggerSuccessVersion('')
+    await TriggerErrorEmbed()
 
     await promise
   } catch (error) {
@@ -207,20 +316,29 @@ test('should throw error on failed loading', async () => {
 })
 
 test('should throw error if RevolutCheckout is missing', async () => {
-  const { script, RevolutPayments, TriggerSuccess } = setup()
+  const {
+    RevolutPayments,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
+  } = setup()
 
   const promise = RevolutPayments({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
 
-  expect(script).toHaveAttribute('id', 'revolut-payments')
-  expect(script).toHaveAttribute('src', 'https://merchant.revolut.com/embed.js')
+  await TriggerSuccessVersion('')
 
-  TriggerSuccess.mockImplementationOnce(() => {
+  const embedScript = document.querySelector('script#revolut-payments')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/embed.js'
+  )
+
+  TriggerSuccessEmbed.mockImplementationOnce(() => {
     // RevolutCheckout is not assigned to window
-    fireEvent.load(script)
+    fireEvent.load(embedScript)
   })
-  TriggerSuccess()
+  await TriggerSuccessEmbed()
 
   await expect(promise).rejects.toEqual(
     new Error(

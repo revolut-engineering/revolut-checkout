@@ -28,19 +28,30 @@ export const MODE = {
 
 export type MODE = typeof MODE
 
-export const URLS = {
-  [MODE.SANDBOX]: 'https://sandbox-merchant.revolut.com/embed.js',
-  [MODE.PRODUCTION]: 'https://merchant.revolut.com/embed.js',
-  [MODE.DEVELOPMENT]: 'https://merchant.revolut.codes/embed.js',
-} as const
-export type URLS = typeof URLS
+type UrlsMap = Readonly<
+  Record<
+    MODE[keyof typeof MODE],
+    Readonly<{ embed: string; version: string; upsell: string }>
+  >
+>
 
-export const UPSELL_URLS = {
-  [MODE.SANDBOX]: 'https://sandbox-merchant.revolut.com/upsell/embed.js',
-  [MODE.PRODUCTION]: 'https://merchant.revolut.com/upsell/embed.js',
-  [MODE.DEVELOPMENT]: 'https://merchant.revolut.codes/upsell/embed.js',
-} as const
-export type UPSELL_URLS = typeof UPSELL_URLS
+export const URLS: UrlsMap = {
+  [MODE.SANDBOX]: {
+    embed: 'https://sandbox-merchant.revolut.com/embed.js',
+    version: 'https://sandbox-merchant.revolut.com/version.js',
+    upsell: 'https://sandbox-merchant.revolut.com/upsell/embed.js',
+  },
+  [MODE.PRODUCTION]: {
+    embed: 'https://merchant.revolut.com/embed.js',
+    version: 'https://merchant.revolut.com/version.js',
+    upsell: 'https://merchant.revolut.com/upsell/embed.js',
+  },
+  [MODE.DEVELOPMENT]: {
+    embed: 'https://merchant.revolut.codes/embed.js',
+    version: 'https://merchant.revolut.codes/version.js',
+    upsell: 'https://merchant.revolut.codes/upsell/embed.js',
+  },
+}
 
 export const REVOLUT_PAY_ORDER_ID_URL_PARAMETER = '_rp_oid'
 export const REVOLUT_PAY_SUCCESS_REDIRECT_URL_PARAMETER = '_rp_s'

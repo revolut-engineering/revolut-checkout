@@ -1,11 +1,12 @@
-import { MODE, UPSELL_URLS } from './constants'
+import { MODE, URLS } from './constants'
 import {
   Locale,
   Mode,
   RevolutCheckout,
   RevolutUpsellModuleInstance,
 } from './types'
-import { loadModule } from './utils'
+import { getVersionedUrl, loadModule } from './utils'
+import { RevolutPaymentsVersionLoader } from './versionLoader'
 
 let loadedUpsellInstance: RevolutCheckout['upsell'] = null
 
@@ -19,8 +20,19 @@ export function RevolutUpsellLoader(
     return Promise.resolve(instance)
   }
 
+  return RevolutPaymentsVersionLoader(mode).then((version) =>
+    loadRevolutUpsell(version, token, mode, locale)
+  )
+}
+
+function loadRevolutUpsell(
+  version: string,
+  token: string,
+  mode: Mode,
+  locale?: Locale | 'auto'
+) {
   return loadModule({
-    src: UPSELL_URLS[mode],
+    src: getVersionedUrl(URLS[mode].upsell, version),
     id: 'revolut-upsell',
     name: 'RevolutUpsell',
   }).then((scriptElement) => {

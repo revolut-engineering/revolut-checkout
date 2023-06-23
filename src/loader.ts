@@ -1,8 +1,9 @@
 import { MODE, URLS } from './constants'
 import { RevolutPaymentsLoader } from './paymentsLoader'
 import { RevolutCheckout, RevolutCheckoutInstance, Mode, Locale } from './types'
-import { loadModule } from './utils'
+import { getVersionedUrl, loadModule } from './utils'
 import { RevolutUpsellLoader } from './upsellLoader'
+import { RevolutPaymentsVersionLoader } from './versionLoader'
 
 let loaded: RevolutCheckout = null
 
@@ -30,8 +31,18 @@ export function RevolutCheckoutLoader(
     return Promise.resolve(loaded(token))
   }
 
+  return RevolutPaymentsVersionLoader(mode).then((version) =>
+    loadRevolutCheckout(version, token, mode)
+  )
+}
+
+function loadRevolutCheckout(
+  version: string,
+  token: string,
+  mode: Mode
+): Promise<RevolutCheckoutInstance> {
   return loadModule({
-    src: URLS[mode],
+    src: getVersionedUrl(URLS[mode].embed, version),
     id: 'revolut-checkout',
     name: 'RevolutCheckout',
   }).then((scriptElement) => {
