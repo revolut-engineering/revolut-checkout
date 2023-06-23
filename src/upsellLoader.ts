@@ -20,7 +20,7 @@ export function RevolutUpsellLoader(
   }
 
   return loadModule({
-    url: UPSELL_URLS[mode],
+    src: UPSELL_URLS[mode],
     id: 'revolut-upsell',
     name: 'RevolutUpsell',
   }).then((scriptElement) => {

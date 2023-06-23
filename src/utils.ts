@@ -1,14 +1,14 @@
 type ModuleParams = {
-  url: string
+  src: string
   id: string
   name: string
 }
 
-export function loadModule({ url, id, name }: ModuleParams) {
+export function loadModule({ src, id, name }: ModuleParams) {
   const script = document.createElement('script')
 
   script.id = id
-  script.src = url
+  script.src = src
   script.async = true
 
   document.head.appendChild(script)

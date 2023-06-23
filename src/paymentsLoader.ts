@@ -20,7 +20,7 @@ export function RevolutPaymentsLoader(
   }
 
   return loadModule({
-    url: URLS[mode],
+    src: URLS[mode],
     id: 'revolut-payments',
     name: 'RevolutPayments',
   }).then((scriptElement) => {

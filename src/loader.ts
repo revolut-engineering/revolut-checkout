@@ -31,7 +31,7 @@ export function RevolutCheckoutLoader(
   }
 
   return loadModule({
-    url: URLS[mode],
+    src: URLS[mode],
     id: 'revolut-checkout',
     name: 'RevolutCheckout',
   }).then((scriptElement) => {
