@@ -5,7 +5,8 @@ import {
   RevolutCheckout,
   RevolutPaymentsModuleInstance,
 } from './types'
-import { loadModule } from './utils'
+import { getVersionedUrl, loadModule } from './utils'
+import { RevolutPaymentsVersionLoader } from './versionLoader'
 
 let loadedPaymentInstance: RevolutCheckout['payments'] = null
 
@@ -19,8 +20,19 @@ export function RevolutPaymentsLoader(
     return Promise.resolve(instance)
   }
 
+  return RevolutPaymentsVersionLoader(mode).then((version) =>
+    loadRevolutPayments(version, token, mode, locale)
+  )
+}
+
+function loadRevolutPayments(
+  version: string,
+  token: string,
+  mode: Mode,
+  locale: Locale | 'auto'
+): Promise<RevolutPaymentsModuleInstance> {
   return loadModule({
-    src: URLS[mode],
+    src: getVersionedUrl(URLS[mode].embed, version),
     id: 'revolut-payments',
     name: 'RevolutPayments',
   }).then((scriptElement) => {

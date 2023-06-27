@@ -28,3 +28,8 @@ export function loadModule({ src, id, name }: ModuleParams) {
     script.onerror = () => handleError('Network error encountered')
   })
 }
+
+export function getVersionedUrl(url: string, version: string): string {
+  const queryParams = version ? new URLSearchParams({ version }).toString() : ''
+  return `${url}${queryParams ? `?${queryParams}` : ''}`
+}

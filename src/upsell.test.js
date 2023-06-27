@@ -1,62 +1,83 @@
 import '@testing-library/jest-dom'
 import { fireEvent } from '@testing-library/dom'
+import {
+  triggerScriptOnLoad,
+  triggerScriptOnError,
+  settleVersionScript,
+} from './testing'
 
-afterEach(() => jest.resetModules())
+afterEach(() => {
+  jest.resetModules()
+
+  document.querySelectorAll('script').forEach((el) => el.remove())
+})
 
 function setup() {
   const RevolutCheckout = require('./index').default
-  const script = document.createElement('script')
 
   const MockUpsellInstance = jest.fn()
   const MockRevolutUpsell = jest.fn(() => MockUpsellInstance)
 
-  const TriggerSuccess = jest.fn(() => {
+  const TriggerSuccessEmbed = jest.fn(() => {
     setTimeout(() => {
       window.RevolutUpsell = MockRevolutUpsell
-      fireEvent.load(script)
+      triggerScriptOnLoad('embed.js')
     })
   })
 
   const TriggerError = jest.fn(() => {
     setTimeout(() => {
-      fireEvent.error(script)
+      triggerScriptOnError('embed.js')
     })
   })
 
-  jest.spyOn(document, 'createElement').mockImplementationOnce(() => script)
+  const TriggerSuccessVersion = (version) =>
+    settleVersionScript(() => {
+      window.__REV_PAY_VERSION__ = version
+      triggerScriptOnLoad('version.js')
+    }, version)
+
+  const TriggerErrorVersion = () =>
+    settleVersionScript(() => {
+      triggerScriptOnError('version.js')
+    })
 
   return {
-    script,
     MockUpsellInstance,
     MockRevolutUpsell,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
     TriggerError,
+    TriggerSuccessVersion,
+    TriggerErrorVersion,
     RevolutUpsell: RevolutCheckout.upsell,
   }
 }
 
 test(`should load embed script for 'dev'`, async () => {
   const {
-    script,
     RevolutUpsell,
     MockUpsellInstance,
     MockRevolutUpsell,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutUpsell({
     mode: 'dev',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-upsell')
-  expect(script).toHaveAttribute(
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.codes/upsell/embed.js'
+    'https://merchant.revolut.codes/upsell/embed.js?version=abc12345'
   )
 
-  TriggerSuccess()
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -69,26 +90,29 @@ test(`should load embed script for 'dev'`, async () => {
 
 test(`should load embed script for 'prod'`, async () => {
   const {
-    script,
     RevolutUpsell,
     MockUpsellInstance,
     MockRevolutUpsell,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutUpsell({
     mode: 'prod',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-upsell')
-  expect(script).toHaveAttribute(
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.com/upsell/embed.js'
+    'https://merchant.revolut.com/upsell/embed.js?version=abc12345'
   )
 
-  TriggerSuccess()
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -101,26 +125,29 @@ test(`should load embed script for 'prod'`, async () => {
 
 test(`should load embed script for 'sandbox'`, async () => {
   const {
-    script,
     RevolutUpsell,
     MockUpsellInstance,
     MockRevolutUpsell,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutUpsell({
     mode: 'sandbox',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-upsell')
-  expect(script).toHaveAttribute(
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
     'src',
-    'https://sandbox-merchant.revolut.com/upsell/embed.js'
+    'https://sandbox-merchant.revolut.com/upsell/embed.js?version=abc12345'
   )
 
-  TriggerSuccess()
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -132,11 +159,17 @@ test(`should load embed script for 'sandbox'`, async () => {
 })
 
 test('should not request new embed script and use loaded one', async () => {
-  const { RevolutUpsell, MockRevolutUpsell, TriggerSuccess } = setup()
+  const {
+    RevolutUpsell,
+    MockRevolutUpsell,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
+  } = setup()
 
   const promise = RevolutUpsell({ publicToken: 'MERCHANT_PUBLIC_TOKEN_1' })
 
-  TriggerSuccess()
+  await TriggerSuccessVersion()
+  await TriggerSuccessEmbed()
 
   await promise
   expect(MockRevolutUpsell).toHaveBeenCalledWith({
@@ -151,25 +184,28 @@ test('should not request new embed script and use loaded one', async () => {
 
 test(`should use 'prod' by default`, async () => {
   const {
-    script,
     RevolutUpsell,
     MockUpsellInstance,
     MockRevolutUpsell,
-    TriggerSuccess,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
   } = setup()
 
   const promise = RevolutUpsell({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
-  const spyLoad = jest.spyOn(script, 'onload')
 
-  expect(script).toHaveAttribute('id', 'revolut-upsell')
-  expect(script).toHaveAttribute(
+  await TriggerSuccessVersion()
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/upsell/embed.js'
   )
 
-  TriggerSuccess()
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
 
   const instance = await promise
 
@@ -180,17 +216,46 @@ test(`should use 'prod' by default`, async () => {
   })
 })
 
+test('should load embed script without version parameter if version script fails to load', async () => {
+  const {
+    RevolutUpsell,
+    MockRevolutUpsell,
+    TriggerErrorVersion,
+    TriggerSuccessEmbed,
+  } = setup()
+
+  const promise = RevolutUpsell({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
+
+  await TriggerErrorVersion()
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.com/upsell/embed.js'
+  )
+
+  await TriggerSuccessEmbed()
+
+  await promise
+  expect(MockRevolutUpsell).toHaveBeenCalledWith({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
+  })
+})
+
 test('should throw error on failed loading', async () => {
   expect.assertions(1)
 
-  const { RevolutUpsell, TriggerError } = setup()
+  const { RevolutUpsell, TriggerSuccessVersion, TriggerError } = setup()
 
   try {
     const promise = RevolutUpsell({
       publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
     })
 
-    TriggerError()
+    await TriggerSuccessVersion()
+    await TriggerError()
 
     await promise
   } catch (error) {
@@ -201,23 +266,25 @@ test('should throw error on failed loading', async () => {
 })
 
 test('should throw error if RevolutCheckout is missing', async () => {
-  const { script, RevolutUpsell, TriggerSuccess } = setup()
+  const { RevolutUpsell, TriggerSuccessVersion, TriggerSuccessEmbed } = setup()
 
   const promise = RevolutUpsell({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
 
-  expect(script).toHaveAttribute('id', 'revolut-upsell')
-  expect(script).toHaveAttribute(
+  await TriggerSuccessVersion()
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/upsell/embed.js'
   )
 
-  TriggerSuccess.mockImplementationOnce(() => {
+  TriggerSuccessEmbed.mockImplementationOnce(() => {
     // RevolutUpsell is not assigned to window
-    fireEvent.load(script)
+    fireEvent.load(embedScript)
   })
-  TriggerSuccess()
+  await TriggerSuccessEmbed()
 
   await expect(promise).rejects.toEqual(
     new Error(`'RevolutUpsell' failed to load: RevolutUpsell is not a function`)
