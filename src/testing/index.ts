@@ -33,10 +33,7 @@ export function settleVersionScript<T extends any[]>(
       // Resolve only when embed is injected as we are attaching listeners to the script element
       // Since version script load errors are ignored, embed is being injected for both onload and onerror
       const observer = new MutationObserver(() => {
-        const scripts = document.querySelectorAll('script')
-        if (
-          Array.from(scripts).find((script) => script.src.includes('embed.js'))
-        ) {
+        if (document.querySelector('script[src*="embed.js"]')) {
           observer.disconnect()
           resolve()
         }
