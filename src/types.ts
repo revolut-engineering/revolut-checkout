@@ -517,10 +517,10 @@ type CommonPaymentsRevolutPayOptions = {
   buttonStyle?: ButtonStyleOptions
   /** Prefill your customer details within the Revolut pay popup */
   customer?: CustomerDetails
-  /** Validation promise to be resolved before a user can make payments.
+  /** Validation function to be resolved before a user can make payments.
    * Throw an error and the error message will be displayed in the Revolut pay popup  */
   validate?: () => Promise<boolean> | boolean
-  /** A promise to create a Revolut order at a later time within the Revolut pay flow  */
+  /** A function to create a Revolut order at a later time within the Revolut pay flow  */
   createOrder: () => Promise<{ publicId: string }>
   __features?: Record<string, any>
   __metadata?: Record<string, any>
@@ -677,6 +677,8 @@ export interface RevolutPaymentsModuleOptions {
 export interface RevolutUpsellModuleInstance {
   /** Card gateway upsell banner */
   cardGatewayBanner: UpsellModuleCardGatewayBannerInstance
+  /** Promotional banner */
+  promotionalBanner: UpsellModulePromotionalBannerInstance
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
@@ -693,6 +695,32 @@ export interface UpsellModuleCardGatewayBannerInstance {
 
 export interface WidgetUpsellCardGatewayBannerOptions {
   orderToken: string
+}
+
+export interface UpsellModulePromotionalBannerInstance {
+  mount: (
+    target: string | HTMLElement,
+    options: WidgetUpsellPromotionalBannerOptions
+  ) => void
+  destroy: () => void
+}
+
+export interface WidgetUpsellPromotionalBannerOptions {
+  /** Unique id of transaction user has just performed */
+  transactionId: string
+  /** Max cashback amount */
+  amount?: number
+  /** Cashback currency */
+  currency: string
+  /** Prefilled customer details within the banner */
+  customer?: Partial<CustomerDetails>
+  /** Style object for customisation */
+  style?: {
+    border?: string
+    borderRadius?: string
+    backgroundColor?: string
+    primaryColor?: string
+  }
 }
 
 export interface RevolutUpsellModuleOptions {
