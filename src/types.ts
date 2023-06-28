@@ -605,7 +605,7 @@ export type RevolutPayEventPayload<
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
-    target: string | HTMLElement,
+    target: string | HTMLElement | null,
     options: WidgetPaymentsRevolutPayOptions
   ) => void
   on: <T extends RevolutPayEvents['type']>(
