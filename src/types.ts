@@ -647,7 +647,7 @@ export interface RevolutCheckoutInstance {
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
   /** The upsell SDK module */
-  upsell: (option: RevolutUpsellModuleOptions) => RevolutPaymentsModuleInstance
+  upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
 
 export interface RevolutPaymentsModuleInstance {
@@ -679,6 +679,8 @@ export interface RevolutUpsellModuleInstance {
   cardGatewayBanner: UpsellModuleCardGatewayBannerInstance
   /** Promotional banner */
   promotionalBanner: UpsellModulePromotionalBannerInstance
+  /** Enrollment confirmation banner */
+  enrollmentConfirmationBanner: UpsellModuleEnrollmentConfirmationBannerInstance
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
@@ -721,6 +723,24 @@ export interface WidgetUpsellPromotionalBannerOptions {
     backgroundColor?: string
     primaryColor?: string
   }
+}
+
+export interface UpsellModuleEnrollmentConfirmationBannerInstance {
+  mount: (
+    target: string | HTMLElement,
+    options: WidgetUpsellEnrollmentConfirmationBannerOptions
+  ) => void
+  destroy: () => void
+}
+
+export interface WidgetUpsellEnrollmentConfirmationBannerOptions {
+  orderToken: string
+  /** Prefilled customer details within the banner */
+  customer?: Partial<CustomerDetails>
+  /** Whether promotional banner should be shown if user has not enrolled */
+  promotionalBanner?: boolean
+  /** Style object for promotional banner customisation */
+  promotionalBannerStyle?: WidgetUpsellPromotionalBannerOptions['style']
 }
 
 export interface RevolutUpsellModuleOptions {
