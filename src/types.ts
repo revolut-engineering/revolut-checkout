@@ -513,6 +513,12 @@ type CommonPaymentsRevolutPayOptions = {
     failure: string
     cancel: string
   }
+  /** Similar to redirectUrls option, however only used for mobile devices */
+  mobileRedirectUrls?: {
+    success: string
+    failure: string
+    cancel: string
+  }
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
   /** Prefill your customer details within the Revolut pay popup */
