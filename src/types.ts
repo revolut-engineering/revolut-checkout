@@ -427,6 +427,8 @@ export interface CardFieldOptions extends PopupOptions {
    * ```
    */
   classes?: FieldClasses
+  /** Whether to prefer dark or light theme. Defaults to light */
+  theme?: 'light' | 'dark'
   /**
    * Don't ask user for the `postcode` inside the card field.
    *
