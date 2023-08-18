@@ -745,6 +745,9 @@ export interface WidgetUpsellEnrollmentConfirmationBannerOptions {
   orderToken: string
   /** Prefilled customer details within the banner */
   customer?: Partial<CustomerDetails>
+  style?: {
+    backgroundColor?: string
+  }
   /** Whether promotional banner should be shown if user has not enrolled */
   promotionalBanner?: boolean
   /** Style object for promotional banner customisation */
