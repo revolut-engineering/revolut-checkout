@@ -654,8 +654,6 @@ export interface RevolutCheckoutInstance {
   payments: (
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
-  /** The upsell SDK module */
-  upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
 
 export interface RevolutPaymentsModuleInstance {
@@ -759,6 +757,7 @@ export interface RevolutUpsellModuleOptions {
   locale?: string | 'auto'
 }
 
+/** @internal */
 export interface RevolutCheckout {
   (token: string): RevolutCheckoutInstance
   payments: (
