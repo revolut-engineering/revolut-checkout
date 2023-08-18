@@ -24,9 +24,9 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build:types": "tsc -p tsconfig.types.json",
+    "build:esm": "tsc -p tsconfig.esm.json --stripInternal",
+    "build:cjs": "tsc -p tsconfig.cjs.json --stripInternal",
+    "build:types": "tsc -p tsconfig.types.json --stripInternal",
     "prebuild": "rimraf esm cjs types",
     "test": "jest",
     "lint": "eslint --ext ts --ext js src/",

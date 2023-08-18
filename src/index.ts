@@ -15,14 +15,21 @@ export {
   Locale,
   RevolutCheckoutCardField,
   RevolutCheckoutInstance,
+  RevolutPaymentsModuleOptions,
+  RevolutPaymentsModuleInstance,
   RevolutUpsellModuleInstance,
+  RevolutUpsellModuleOptions,
   RevolutPayEvents,
   RevolutPayEventPayload,
   UpsellModuleCardGatewayBannerInstance,
+  UpsellModulePromotionalBannerInstance,
+  UpsellModuleEnrollmentConfirmationBannerInstance,
   Mode,
   WidgetPaymentsRevolutPayOptions,
   WidgetPaymentRequestInstance,
   WidgetUpsellCardGatewayBannerOptions,
+  WidgetUpsellPromotionalBannerOptions,
+  WidgetUpsellEnrollmentConfirmationBannerOptions,
 } from './types'
 
 export {
