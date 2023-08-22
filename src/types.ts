@@ -353,7 +353,7 @@ type RevolutPayButtonStyleOptions = {
 export type ButtonStyleOptions = {
   height?: string
   size?: 'large' | 'small'
-  radius?: 'none' | 'small' | 'large'
+  radius?: 'none' | 'small' | 'large' | 'round'
   variant?: 'dark' | 'light' | 'light-outlined'
   action?: 'donate' | 'pay' | 'subscribe' | 'buy'
 } & Partial<RevolutPayButtonStyleOptions>
