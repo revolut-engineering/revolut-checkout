@@ -63,4 +63,4 @@ import {
 - [Plugins](https://developer.revolut.com/docs/accept-payments/#plugins)
 
 ---
-© 2020 Revolut Ltd
+© 2023 Revolut Ltd
