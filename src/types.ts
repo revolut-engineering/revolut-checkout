@@ -703,6 +703,10 @@ export interface UpsellModuleCardGatewayBannerInstance {
 
 export interface WidgetUpsellCardGatewayBannerOptions {
   orderToken: string
+  style?: {
+    border?: string
+    borderRadius?: string
+  }
 }
 
 export interface UpsellModulePromotionalBannerInstance {
