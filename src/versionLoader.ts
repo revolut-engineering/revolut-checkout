@@ -1,6 +1,6 @@
 import { MODE, URLS } from './constants'
 import { Mode } from './types'
-import { loadModule } from './utils'
+import { getVersionedUrl, loadModule } from './utils'
 
 let loadedVersion: string = null
 
@@ -12,7 +12,7 @@ export function RevolutPaymentsVersionLoader(
   }
 
   return loadModule({
-    src: URLS[mode].version,
+    src: getVersionedUrl(URLS[mode].version, `${Date.now()}`),
     id: 'revolut-pay-version',
     name: 'RevolutPayVersion',
   })

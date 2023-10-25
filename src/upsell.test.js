@@ -67,6 +67,14 @@ test(`should load embed script for 'dev'`, async () => {
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
   })
 
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
+    )
+  )
+
   await TriggerSuccessVersion('abc12345')
 
   const embedScript = document.querySelector('script#revolut-upsell')
@@ -102,6 +110,14 @@ test(`should load embed script for 'prod'`, async () => {
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
 
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.com\/version.js\?version=\d+/
+    )
+  )
+
   await TriggerSuccessVersion('abc12345')
 
   const embedScript = document.querySelector('script#revolut-upsell')
@@ -136,6 +152,14 @@ test(`should load embed script for 'sandbox'`, async () => {
     mode: 'sandbox',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
   })
+
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/sandbox-merchant.revolut.com\/version.js\?version=\d+/
+    )
+  )
 
   await TriggerSuccessVersion('abc12345')
 
