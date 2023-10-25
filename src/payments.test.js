@@ -85,7 +85,9 @@ test(`should load embed script for 'dev'`, async () => {
   const versionScript = document.querySelector('script#revolut-pay-version')
   expect(versionScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.codes/version.js'
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
+    )
   )
 
   await TriggerSuccessVersion('abc12345')
@@ -128,7 +130,9 @@ test(`should load embed script for 'prod'`, async () => {
   const versionScript = document.querySelector('script#revolut-pay-version')
   expect(versionScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.com/version.js'
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.com\/version.js\?version=\d+/
+    )
   )
 
   await TriggerSuccessVersion('abc12345')
@@ -171,7 +175,9 @@ test(`should load embed script for 'sandbox'`, async () => {
   const versionScript = document.querySelector('script#revolut-pay-version')
   expect(versionScript).toHaveAttribute(
     'src',
-    'https://sandbox-merchant.revolut.com/version.js'
+    expect.stringMatching(
+      /https:\/\/sandbox-merchant.revolut.com\/version.js\?version=\d+/
+    )
   )
 
   await TriggerSuccessVersion('abc12345')
@@ -236,7 +242,9 @@ test(`should use 'prod' by default`, async () => {
   const versionScript = document.querySelector('script#revolut-pay-version')
   expect(versionScript).toHaveAttribute(
     'src',
-    'https://merchant.revolut.com/version.js'
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.com\/version.js\?version=\d+/
+    )
   )
 
   await TriggerSuccessVersion('')
