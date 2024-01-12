@@ -344,10 +344,40 @@ export type FieldStatus = Omit<StatusRecord<boolean>, 'default'>
 export type FieldStyles = Partial<StatusRecord<Partial<CSSStyleDeclaration>>>
 export type FieldClasses = Partial<StatusRecord<string>>
 
+type RevolutPayButtonCashbackCurrency =
+  | 'AED'
+  | 'AUD'
+  | 'BGN'
+  | 'CAD'
+  | 'CHF'
+  | 'CZK'
+  | 'DKK'
+  | 'EUR'
+  | 'GBP'
+  | 'HKD'
+  | 'HUF'
+  | 'ILS'
+  | 'JPY'
+  | 'MXN'
+  | 'NOK'
+  | 'NZD'
+  | 'PLN'
+  | 'QAR'
+  | 'RON'
+  | 'RUB'
+  | 'SAR'
+  | 'SEK'
+  | 'SGD'
+  | 'THB'
+  | 'TRY'
+  | 'USD'
+  | 'ZAR'
+
 type RevolutPayButtonStyleOptions = {
   cashback: boolean
-  cashbackAmount: 1000 | 2000
-  cashbackCurrency: 'USD' | 'GBP' | 'EUR'
+  /** @deprecated */
+  cashbackAmount?: 1000 | 2000
+  cashbackCurrency: RevolutPayButtonCashbackCurrency
 }
 
 export type ButtonStyleOptions = {
