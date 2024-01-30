@@ -1,6 +1,6 @@
 {
   "name": "@revolut/checkout",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "description": "RevolutCheckout.js as npm module",
   "author": "John Grishin <hi@johngrish.in>",
   "license": "Apache-2.0",
