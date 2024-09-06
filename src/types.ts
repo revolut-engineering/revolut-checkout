@@ -747,12 +747,20 @@ export interface UpsellModulePromotionalBannerInstance {
   destroy: () => void
 }
 
-export interface WidgetUpsellPromotionalBannerOptions {
+export type WidgetUpsellPromotionalBannerOptions =
+  | WidgetUpsellPromotionalBannerSignUpBannerOptions
+  | WidgetUpsellPromotionalBannerInformationalBannerOptions
+  | WidgetUpsellPromotionalBannerInformationalLinkOptions
+  | WidgetUpsellPromotionalBannerInformationalIconOptions
+
+export interface WidgetUpsellPromotionalBannerSignUpBannerOptions {
+  /** Promotional banner which allows your customer to join Revolut and get rewards if applicable */
+  variant?: 'sign_up'
   /** Unique id of transaction user has just performed */
   transactionId: string
-  /** Max cashback amount */
+  /** Transaction amount */
   amount?: number
-  /** Cashback currency */
+  /** Transaction currency */
   currency: string
   /** Prefilled customer details within the banner */
   customer?: Partial<CustomerDetails>
@@ -763,6 +771,33 @@ export interface WidgetUpsellPromotionalBannerOptions {
     backgroundColor?: string
     primaryColor?: string
   }
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalBannerOptions {
+  /** Promotional banner with a summary of Revolut Pay benefits, allowing to view more details on click */
+  variant: 'banner'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalLinkOptions {
+  /** Promotional banner displayed as a link, allowing to view Revolut Pay details on click */
+  variant: 'link'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalIconOptions {
+  /** Promotional banner displayed as an icon, allowing to view Revolut Pay details on click */
+  variant: 'icon'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
 }
 
 export interface UpsellModuleEnrollmentConfirmationBannerInstance {
@@ -783,7 +818,7 @@ export interface WidgetUpsellEnrollmentConfirmationBannerOptions {
   /** Whether promotional banner should be shown if user has not enrolled */
   promotionalBanner?: boolean
   /** Style object for promotional banner customisation */
-  promotionalBannerStyle?: WidgetUpsellPromotionalBannerOptions['style']
+  promotionalBannerStyle?: WidgetUpsellPromotionalBannerSignUpBannerOptions['style']
 }
 
 export interface RevolutUpsellModuleOptions {
