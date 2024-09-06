@@ -758,9 +758,9 @@ export interface WidgetUpsellPromotionalBannerSignUpBannerOptions {
   variant?: 'sign_up'
   /** Unique id of transaction user has just performed */
   transactionId: string
-  /** Max cashback amount */
+  /** Transaction amount */
   amount?: number
-  /** Cashback currency */
+  /** Transaction currency */
   currency: string
   /** Prefilled customer details within the banner */
   customer?: Partial<CustomerDetails>
@@ -776,27 +776,27 @@ export interface WidgetUpsellPromotionalBannerSignUpBannerOptions {
 export interface WidgetUpsellPromotionalBannerInformationalBannerOptions {
   /** Promotional banner with a summary of Revolut Pay benefits, allowing to view more details on click */
   variant: 'banner'
-  /** Max cashback amount */
+  /** Checkout amount */
   amount?: number
-  /** Cashback currency */
+  /** Checkout currency */
   currency: string
 }
 
 export interface WidgetUpsellPromotionalBannerInformationalLinkOptions {
   /** Promotional banner displayed as a link, allowing to view Revolut Pay details on click */
   variant: 'link'
-  /** Max cashback amount */
+  /** Checkout amount */
   amount?: number
-  /** Cashback currency */
+  /** Checkout currency */
   currency: string
 }
 
 export interface WidgetUpsellPromotionalBannerInformationalIconOptions {
   /** Promotional banner displayed as an icon, allowing to view Revolut Pay details on click */
   variant: 'icon'
-  /** Max cashback amount */
+  /** Checkout amount */
   amount?: number
-  /** Cashback currency */
+  /** Checkout currency */
   currency: string
 }
 
