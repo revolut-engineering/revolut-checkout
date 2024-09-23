@@ -527,11 +527,13 @@ export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   validate: () => void
 }
 
+export type PaymentRequestPaymentMethod = 'applePay' | 'googlePay'
+
 export interface PaymentRequestInstance {
   /** Render the payment request button */
   render: () => Promise<void>
   /** Check if user can make payment via a supported payment request method  */
-  canMakePayment: () => Promise<'applePay' | 'googlePay' | 'basicCard' | null>
+  canMakePayment: () => Promise<PaymentRequestPaymentMethod | null>
   /** Manually destroy the payment request if needed */
   destroy: () => void
 }
@@ -657,6 +659,32 @@ export interface WidgetPaymentRequestInstance
   extends PaymentRequestInstance,
     RevolutCheckoutInstance {}
 
+export interface PaymentsModulePaymentRequestOptions
+  extends Omit<
+    PaymentRequestOptions,
+    'token' | 'target' | 'disableApplePay' | 'disableBasicCard'
+  > {
+  /** The amount to be paid by the customer, in the lowest denomination (e.g. cents). */
+  amount: number
+  /** ISO 4217 currency code in upper case. */
+  currency: string
+  /** Preferred method ('applePay' or 'googlePay') or an array of methods in order of preference */
+  preferredPaymentMethod?:
+    | PaymentRequestPaymentMethod
+    | Array<PaymentRequestPaymentMethod>
+  /** A function to create a Revolut order at a later time within the flow  */
+  createOrder: () => Promise<{ publicId: string }>
+}
+
+export interface PaymentsModulePaymentRequest {
+  (
+    target: HTMLElement,
+    options: PaymentsModulePaymentRequestOptions
+  ): PaymentRequestInstance
+
+  destroy: () => void
+}
+
 export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
@@ -689,6 +717,8 @@ export interface RevolutCheckoutInstance {
 export interface RevolutPaymentsModuleInstance {
   /** Accept payments via Revolut pay v2 */
   revolutPay: PaymentsModuleRevolutPayInstance
+  /** Accept payments via Apple Pay or Google Pay */
+  paymentRequest: PaymentsModulePaymentRequest
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
@@ -747,12 +777,20 @@ export interface UpsellModulePromotionalBannerInstance {
   destroy: () => void
 }
 
-export interface WidgetUpsellPromotionalBannerOptions {
+export type WidgetUpsellPromotionalBannerOptions =
+  | WidgetUpsellPromotionalBannerSignUpBannerOptions
+  | WidgetUpsellPromotionalBannerInformationalBannerOptions
+  | WidgetUpsellPromotionalBannerInformationalLinkOptions
+  | WidgetUpsellPromotionalBannerInformationalIconOptions
+
+export interface WidgetUpsellPromotionalBannerSignUpBannerOptions {
+  /** Promotional banner which allows your customer to join Revolut and get rewards if applicable */
+  variant?: 'sign_up'
   /** Unique id of transaction user has just performed */
   transactionId: string
-  /** Max cashback amount */
+  /** Transaction amount */
   amount?: number
-  /** Cashback currency */
+  /** Transaction currency */
   currency: string
   /** Prefilled customer details within the banner */
   customer?: Partial<CustomerDetails>
@@ -763,6 +801,33 @@ export interface WidgetUpsellPromotionalBannerOptions {
     backgroundColor?: string
     primaryColor?: string
   }
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalBannerOptions {
+  /** Promotional banner with a summary of Revolut Pay benefits, allowing to view more details on click */
+  variant: 'banner'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalLinkOptions {
+  /** Promotional banner displayed as a link, allowing to view Revolut Pay details on click */
+  variant: 'link'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
+}
+
+export interface WidgetUpsellPromotionalBannerInformationalIconOptions {
+  /** Promotional banner displayed as an icon, allowing to view Revolut Pay details on click */
+  variant: 'icon'
+  /** Checkout amount */
+  amount?: number
+  /** Checkout currency */
+  currency: string
 }
 
 export interface UpsellModuleEnrollmentConfirmationBannerInstance {
@@ -783,7 +848,7 @@ export interface WidgetUpsellEnrollmentConfirmationBannerOptions {
   /** Whether promotional banner should be shown if user has not enrolled */
   promotionalBanner?: boolean
   /** Style object for promotional banner customisation */
-  promotionalBannerStyle?: WidgetUpsellPromotionalBannerOptions['style']
+  promotionalBannerStyle?: WidgetUpsellPromotionalBannerSignUpBannerOptions['style']
 }
 
 export interface RevolutUpsellModuleOptions {
@@ -799,3 +864,4 @@ export interface RevolutCheckout {
   ) => RevolutPaymentsModuleInstance
   upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
+
