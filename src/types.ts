@@ -864,4 +864,3 @@ export interface RevolutCheckout {
   ) => RevolutPaymentsModuleInstance
   upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
-
