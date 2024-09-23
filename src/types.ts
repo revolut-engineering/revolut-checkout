@@ -527,11 +527,13 @@ export interface RevolutCheckoutCardField extends RevolutCheckoutInstance {
   validate: () => void
 }
 
+export type PaymentRequestPaymentMethod = 'applePay' | 'googlePay'
+
 export interface PaymentRequestInstance {
   /** Render the payment request button */
   render: () => Promise<void>
   /** Check if user can make payment via a supported payment request method  */
-  canMakePayment: () => Promise<'applePay' | 'googlePay' | 'basicCard' | null>
+  canMakePayment: () => Promise<PaymentRequestPaymentMethod | null>
   /** Manually destroy the payment request if needed */
   destroy: () => void
 }
@@ -657,6 +659,32 @@ export interface WidgetPaymentRequestInstance
   extends PaymentRequestInstance,
     RevolutCheckoutInstance {}
 
+export interface PaymentsModulePaymentRequestOptions
+  extends Omit<
+    PaymentRequestOptions,
+    'token' | 'target' | 'disableApplePay' | 'disableBasicCard'
+  > {
+  /** The amount to be paid by the customer, in the lowest denomination (e.g. cents). */
+  amount: number
+  /** ISO 4217 currency code in upper case. */
+  currency: string
+  /** Preferred method ('applePay' or 'googlePay') or an array of methods in order of preference */
+  preferredPaymentMethod?:
+    | PaymentRequestPaymentMethod
+    | Array<PaymentRequestPaymentMethod>
+  /** A function to create a Revolut order at a later time within the flow  */
+  createOrder: () => Promise<{ publicId: string }>
+}
+
+export interface PaymentsModulePaymentRequest {
+  (
+    target: HTMLElement,
+    options: PaymentsModulePaymentRequestOptions
+  ): PaymentRequestInstance
+
+  destroy: () => void
+}
+
 export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
@@ -689,6 +717,8 @@ export interface RevolutCheckoutInstance {
 export interface RevolutPaymentsModuleInstance {
   /** Accept payments via Revolut pay v2 */
   revolutPay: PaymentsModuleRevolutPayInstance
+  /** Accept payments via Apple Pay or Google Pay */
+  paymentRequest: PaymentsModulePaymentRequest
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
@@ -834,3 +864,4 @@ export interface RevolutCheckout {
   ) => RevolutPaymentsModuleInstance
   upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
+
