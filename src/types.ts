@@ -767,6 +767,7 @@ export interface WidgetUpsellCardGatewayBannerOptions {
     border?: string
     borderRadius?: string
   }
+  __metadata?: Record<string, any>
 }
 
 export interface UpsellModulePromotionalBannerInstance {
