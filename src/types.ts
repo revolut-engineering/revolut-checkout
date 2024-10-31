@@ -516,6 +516,10 @@ export interface PaymentRequestOptions extends CommonOptions {
   requestShipping?: boolean
   /** Request payer name in payment request UI */
   requestPayerName?: boolean
+  /** Request payer phone in payment request UI */
+  requestPayerPhone?: boolean
+  /** Request payer email in payment request UI */
+  requestPayerEmail?: boolean
   /** Disable payment request via basic card */
   disableBasicCard?: boolean
   /** Styles of the PaymentRequest button */
