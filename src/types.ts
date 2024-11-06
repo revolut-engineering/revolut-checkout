@@ -430,7 +430,7 @@ export interface CommonOptions {
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
   onError?: (
     error: RevolutCheckoutError,
-    payload: { orderId: OrderToken | undefined }
+    payload: { orderId: string | undefined }
   ) => void
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
