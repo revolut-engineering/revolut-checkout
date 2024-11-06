@@ -426,9 +426,12 @@ export interface CommonOptions {
   /** Controls the language of the text in the widget method */
   locale?: Locale | 'auto'
   /** Callback will be called when the payment is completed successfully */
-  onSuccess?: () => void
+  onSuccess?: (payload: { orderId: string }) => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
-  onError?: (error: RevolutCheckoutError) => void
+  onError?: (
+    error: RevolutCheckoutError,
+    payload: { orderId: string | undefined }
+  ) => void
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
   /** Indicates in which case this saved payment method can be used for payments */
@@ -636,9 +639,14 @@ export type RevolutPayEvents =
       payload:
         | {
             type: 'success'
+            orderId: string
           }
-        | { type: 'error'; error: RevolutCheckoutError }
-        | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
+        | { type: 'error'; error: RevolutCheckoutError; orderId: string }
+        | {
+            type: 'cancel'
+            dropOffState: RevolutPayDropOffState
+            orderId?: string
+          }
     }
   | {
       type: 'click'
