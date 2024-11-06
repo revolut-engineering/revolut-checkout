@@ -254,7 +254,7 @@ export type CountryCode =
   | 'QA'
   | 'MZ'
 
-export type Locale = typeof LOCALES[number]
+export type Locale = (typeof LOCALES)[number]
 
 export type ValidationErrorType =
   | 'validation.card.number.incomplete'
@@ -428,7 +428,10 @@ export interface CommonOptions {
   /** Callback will be called when the payment is completed successfully */
   onSuccess?: (payload: { orderId: string }) => void
   /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
-  onError?: (error: RevolutCheckoutError, payload: { orderId: OrderToken | undefined }) => void
+  onError?: (
+    error: RevolutCheckoutError,
+    payload: { orderId: OrderToken | undefined }
+  ) => void
   /** Callback if an user did not complete the transaction and canceled the authorisation or closed the checkout window */
   onCancel?: () => void
   /** Indicates in which case this saved payment method can be used for payments */
@@ -639,16 +642,19 @@ export type RevolutPayEvents =
             orderId: string
           }
         | { type: 'error'; error: RevolutCheckoutError; orderId: string }
-        | { type: 'cancel'; dropOffState: RevolutPayDropOffState; orderId?: string }
+        | {
+            type: 'cancel'
+            dropOffState: RevolutPayDropOffState
+            orderId?: string
+          }
     }
   | {
       type: 'click'
       payload: null
     }
 
-export type RevolutPayEventPayload<
-  T extends RevolutPayEvents['type']
-> = Extract<RevolutPayEvents, { type: T }>['payload']
+export type RevolutPayEventPayload<T extends RevolutPayEvents['type']> =
+  Extract<RevolutPayEvents, { type: T }>['payload']
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
@@ -871,3 +877,4 @@ export interface RevolutCheckout {
   ) => RevolutPaymentsModuleInstance
   upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
 }
+
