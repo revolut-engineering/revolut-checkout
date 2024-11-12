@@ -636,9 +636,14 @@ export type RevolutPayEvents =
       payload:
         | {
             type: 'success'
+            orderId: string
           }
-        | { type: 'error'; error: RevolutCheckoutError }
-        | { type: 'cancel'; dropOffState: RevolutPayDropOffState }
+        | { type: 'error'; error: RevolutCheckoutError; orderId: string }
+        | {
+            type: 'cancel'
+            dropOffState: RevolutPayDropOffState
+            orderId?: string
+          }
     }
   | {
       type: 'click'
