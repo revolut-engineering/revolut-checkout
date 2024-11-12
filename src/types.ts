@@ -830,6 +830,11 @@ export interface WidgetUpsellPromotionalBannerInformationalLinkOptions {
   amount?: number
   /** Checkout currency */
   currency: string
+  /** Style object for customisation */
+  style?: {
+    text?: 'learn_more' | 'cashback'
+    color?: 'blue' | 'black'
+  }
 }
 
 export interface WidgetUpsellPromotionalBannerInformationalIconOptions {
