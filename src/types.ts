@@ -559,6 +559,7 @@ type CommonPaymentsRevolutPayOptions = {
     failure: string
     cancel: string
   }
+  appReturnUrl?: string
   billingAddress?: Address
   buttonStyle?: ButtonStyleOptions
   /** Prefill your customer details within the Revolut pay popup */
