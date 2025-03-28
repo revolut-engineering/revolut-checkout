@@ -16,6 +16,7 @@ export const LOCALES = [
   'sv',
   'bg',
   'ro',
+  'ru',
   'el',
   'hr',
 ] as const
