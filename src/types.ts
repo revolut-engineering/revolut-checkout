@@ -674,20 +674,20 @@ export interface PaymentsModulePayByBankInstance {
   destroy: () => void
 }
 
-export interface PaymentsModulePayByBankOptions extends CommonOptions {
+export interface PaymentsModulePayByBankOptions {
+  createOrder: () => Promise<{ publicId: string }>
   instantOnly?: boolean
   location?: CountryCode
-  createOrder: () => Promise<{ publicId: string }>
-}
-
-export interface PaymentsModulePayByBankParams {
-  options: PaymentsModulePayByBankOptions
-  paymentOptions: RevolutPaymentsModuleOptions
+  onSuccess?: (payload: { orderId: string }) => void
+  onError?: (payload: {
+    error: RevolutCheckoutError
+    orderId: string
+  }) => void
+  onCancel?: (payload: { orderId: string | undefined }) => void
 }
 
 export interface PaymentsModulePayByBank {
-  (params: PaymentsModulePayByBankParams): PaymentsModulePayByBankInstance
-  destroy: () => void
+  (options: PaymentsModulePayByBankOptions): PaymentsModulePayByBankInstance
 }
 
 export interface WidgetPaymentRequestInstance
