@@ -690,7 +690,6 @@ export interface PaymentsModulePayByBank {
   destroy: () => void
 }
 
-
 export interface WidgetPaymentRequestInstance
   extends PaymentRequestInstance,
     RevolutCheckoutInstance {}
