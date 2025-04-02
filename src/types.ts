@@ -465,6 +465,8 @@ export interface CardFieldOptions extends PopupOptions {
    * When disabling it, make sure that you provide full customer `billingAddress` in `.submit`
    */
   hidePostcodeField?: boolean
+  /** Disabled by default. When enabled will show loading popup */
+  showLoadingIndicator?: boolean
   /** Callback called on field validation and contains arroy of `ValidationError`. */
   onValidation?: (errors: ValidationError[]) => void
   /**
@@ -667,6 +669,28 @@ export interface PaymentsModuleRevolutPayInstance {
   destroy: () => void
 }
 
+export interface PaymentsModulePayByBankInstance {
+  show: () => void
+  destroy: () => void
+}
+
+export interface PaymentsModulePayByBankOptions extends CommonOptions {
+  instantOnly?: boolean
+  location?: CountryCode
+  createOrder: () => Promise<{ publicId: string }>
+}
+
+export interface PaymentsModulePayByBankParams {
+  options: PaymentsModulePayByBankOptions
+  paymentOptions: RevolutPaymentsModuleOptions
+}
+
+export interface PaymentsModulePayByBank {
+  (params: PaymentsModulePayByBankParams): PaymentsModulePayByBankInstance
+  destroy: () => void
+}
+
+
 export interface WidgetPaymentRequestInstance
   extends PaymentRequestInstance,
     RevolutCheckoutInstance {}
@@ -731,6 +755,8 @@ export interface RevolutPaymentsModuleInstance {
   revolutPay: PaymentsModuleRevolutPayInstance
   /** Accept payments via Apple Pay or Google Pay */
   paymentRequest: PaymentsModulePaymentRequest
+  /** Accept payments via Pay By Bank */
+  payByBank: PaymentsModulePayByBank
   /** Manually destroy the instance	 */
   destroy: () => void
   /** Controls the language of the text in the widget */
