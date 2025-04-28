@@ -19,6 +19,7 @@ export const LOCALES = [
   'ru',
   'el',
   'hr',
+  'tr',
 ] as const
 
 export const MODE = {
