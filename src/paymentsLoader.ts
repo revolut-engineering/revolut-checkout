@@ -5,7 +5,7 @@ import {
   RevolutCheckout,
   RevolutPaymentsModuleInstance,
 } from './types'
-import { getVersionedUrl, loadModule } from './utils'
+import { getVersionedUrl, loadScript } from './utils'
 import { RevolutPaymentsVersionLoader } from './versionLoader'
 
 let loadedPaymentInstance: RevolutCheckout['payments'] = null
@@ -31,12 +31,14 @@ function loadRevolutPayments(
   mode: Mode,
   locale: Locale | 'auto'
 ): Promise<RevolutPaymentsModuleInstance> {
-  return loadModule({
+  return loadScript({
     src: getVersionedUrl(URLS[mode].embed, version),
     id: 'revolut-payments',
     name: 'RevolutPayments',
   }).then((scriptElement) => {
-    if (typeof RevolutCheckout === 'function') {
+    if (loadedPaymentInstance) {
+      return loadedPaymentInstance({ publicToken: token, locale })
+    } else if (typeof RevolutCheckout === 'function') {
       loadedPaymentInstance = RevolutCheckout.payments
       delete window.RevolutCheckout
 

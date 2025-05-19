@@ -1,21 +1,28 @@
-type ModuleParams = {
+const pendingScripts: {
+  [url: string]: Promise<HTMLScriptElement> | undefined
+} = {}
+
+type ScriptParams = {
   src: string
   id: string
   name: string
 }
 
-export function loadModule({ src, id, name }: ModuleParams) {
+export function loadScript({ src, id, name }: ScriptParams) {
+  if (pendingScripts[src]) {
+    return pendingScripts[src]
+  }
+
   const script = document.createElement('script')
 
   script.id = id
   script.src = src
   script.async = true
 
-  document.head.appendChild(script)
-
-  return new Promise<HTMLScriptElement>((resolve, reject) => {
+  const promise = new Promise<HTMLScriptElement>((resolve, reject) => {
     function handleError(reason: string) {
       document.head.removeChild(script)
+      delete pendingScripts[src]
 
       reject(new Error(`'${name}' failed to load: ${reason}`))
     }
@@ -27,6 +34,11 @@ export function loadModule({ src, id, name }: ModuleParams) {
     script.onload = handleLoad
     script.onerror = () => handleError('Network error encountered')
   })
+
+  document.head.appendChild(script)
+  pendingScripts[src] = promise
+
+  return promise
 }
 
 export function getVersionedUrl(url: string, version: string): string {

@@ -206,6 +206,59 @@ test('should not request new embed script and use loaded one', async () => {
   })
 })
 
+test(`should support loading multiple embed scripts for 'dev'`, async () => {
+  const {
+    RevolutUpsell,
+    MockUpsellInstance,
+    MockRevolutUpsell,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
+  } = setup()
+
+  const promise1 = RevolutUpsell({
+    mode: 'dev',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
+  })
+  const promise2 = RevolutUpsell({
+    mode: 'dev',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX2',
+  })
+
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
+    )
+  )
+
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-upsell')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.codes/upsell/embed.js?version=abc12345'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
+
+  const instance1 = await promise1
+  const instance2 = await promise2
+
+  expect(spyLoad).toHaveBeenCalled()
+  expect(instance1).toBe(instance2)
+  expect(instance1).toBe(MockUpsellInstance)
+  expect(instance2).toBe(MockUpsellInstance)
+  expect(MockRevolutUpsell).toHaveBeenCalledWith({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
+  })
+  expect(MockRevolutUpsell).toHaveBeenCalledWith({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX2',
+  })
+})
+
 test(`should use 'prod' by default`, async () => {
   const {
     RevolutUpsell,
