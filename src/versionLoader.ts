@@ -1,8 +1,9 @@
 import { MODE, URLS } from './constants'
 import { Mode } from './types'
-import { getVersionedUrl, loadModule } from './utils'
+import { getVersionedUrl, loadScript } from './utils'
 
 let loadedVersion: string = null
+let pendingTimestamp: number | null = null
 
 export function RevolutPaymentsVersionLoader(
   mode: Mode = RevolutPaymentsVersionLoader.mode
@@ -11,22 +12,28 @@ export function RevolutPaymentsVersionLoader(
     return Promise.resolve(loadedVersion)
   }
 
-  return loadModule({
-    src: getVersionedUrl(URLS[mode].version, `${Date.now()}`),
+  pendingTimestamp = pendingTimestamp ?? Date.now()
+  return loadScript({
+    src: getVersionedUrl(URLS[mode].version, `${pendingTimestamp}`),
     id: 'revolut-pay-version',
     name: 'RevolutPayVersion',
   })
     .then(() => {
-      loadedVersion =
-        '__REV_PAY_VERSION__' in window &&
-        typeof __REV_PAY_VERSION__ === 'string'
-          ? __REV_PAY_VERSION__
-          : ''
-      delete window.__REV_PAY_VERSION__
+      pendingTimestamp = null
+
+      if (typeof loadedVersion !== 'string' || !loadedVersion) {
+        loadedVersion =
+          '__REV_PAY_VERSION__' in window &&
+          typeof __REV_PAY_VERSION__ === 'string'
+            ? __REV_PAY_VERSION__
+            : ''
+        delete window.__REV_PAY_VERSION__
+      }
 
       return loadedVersion
     })
     .catch(() => {
+      pendingTimestamp = null
       loadedVersion = ''
       return loadedVersion
     })

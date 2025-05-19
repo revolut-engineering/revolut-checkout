@@ -5,7 +5,7 @@ import {
   RevolutCheckout,
   RevolutUpsellModuleInstance,
 } from './types'
-import { getVersionedUrl, loadModule } from './utils'
+import { getVersionedUrl, loadScript } from './utils'
 import { RevolutPaymentsVersionLoader } from './versionLoader'
 
 let loadedUpsellInstance: RevolutCheckout['upsell'] = null
@@ -31,12 +31,14 @@ function loadRevolutUpsell(
   mode: Mode,
   locale?: Locale | 'auto'
 ) {
-  return loadModule({
+  return loadScript({
     src: getVersionedUrl(URLS[mode].upsell, version),
     id: 'revolut-upsell',
     name: 'RevolutUpsell',
   }).then((scriptElement) => {
-    if (typeof RevolutUpsell === 'function') {
+    if (loadedUpsellInstance) {
+      return loadedUpsellInstance({ publicToken: token, locale })
+    } else if (typeof RevolutUpsell === 'function') {
       loadedUpsellInstance = RevolutUpsell
       delete window.RevolutUpsell
 

@@ -194,6 +194,48 @@ test('should not request new embed script and use loaded one', async () => {
   expect(MockRevolutCheckout).toHaveBeenCalledWith('XXX_2')
 })
 
+test(`should support loading multiple embed scripts for 'dev'`, async () => {
+  const {
+    RevolutCheckout,
+    MockInstance,
+    MockRevolutCheckout,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
+  } = setup()
+
+  const promise1 = RevolutCheckout('DEV_XXX1', 'dev')
+  const promise2 = RevolutCheckout('DEV_XXX2', 'dev')
+
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
+    )
+  )
+
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-checkout')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.codes/embed.js?version=abc12345'
+  )
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
+
+  const instance1 = await promise1
+  const instance2 = await promise2
+
+  expect(instance1).toBe(instance2)
+  expect(spyLoad).toHaveBeenCalled()
+  expect(instance1).toBe(MockInstance)
+  expect(instance2).toBe(MockInstance)
+  expect(MockRevolutCheckout).toHaveBeenCalledWith('DEV_XXX1')
+  expect(MockRevolutCheckout).toHaveBeenCalledWith('DEV_XXX2')
+})
+
 test(`should use 'prod' by default`, async () => {
   const {
     RevolutCheckout,
