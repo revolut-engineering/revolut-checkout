@@ -20,31 +20,25 @@ export function RevolutUpsellLoader(
     return Promise.resolve(instance)
   }
 
-  return RevolutPaymentsVersionLoader(mode).then((version) =>
-    loadRevolutUpsell(version, token, mode, locale)
-  )
+  return RevolutPaymentsVersionLoader(mode)
+    .then((version) => loadRevolutUpsell(version, mode))
+    .then((revolutUpsell) => revolutUpsell({ publicToken: token, locale }))
 }
 
-function loadRevolutUpsell(
-  version: string,
-  token: string,
-  mode: Mode,
-  locale?: Locale | 'auto'
-) {
+function loadRevolutUpsell(version: string, mode: Mode) {
   return loadScript({
     src: getVersionedUrl(URLS[mode].upsell, version),
     id: 'revolut-upsell',
     name: 'RevolutUpsell',
-  }).then((scriptElement) => {
+  }).then(() => {
     if (loadedUpsellInstance) {
-      return loadedUpsellInstance({ publicToken: token, locale })
+      return loadedUpsellInstance
     } else if (typeof RevolutUpsell === 'function') {
       loadedUpsellInstance = RevolutUpsell
       delete window.RevolutUpsell
 
-      return loadedUpsellInstance({ publicToken: token, locale })
+      return loadedUpsellInstance
     } else {
-      document.head.removeChild(scriptElement)
       throw new Error(
         `'RevolutUpsell' failed to load: RevolutUpsell is not a function`
       )

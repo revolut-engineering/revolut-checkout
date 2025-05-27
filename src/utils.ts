@@ -1,5 +1,5 @@
 const pendingScripts: {
-  [url: string]: Promise<HTMLScriptElement> | undefined
+  [url: string]: Promise<void> | undefined
 } = {}
 
 type ScriptParams = {
@@ -19,7 +19,7 @@ export function loadScript({ src, id, name }: ScriptParams) {
   script.src = src
   script.async = true
 
-  const promise = new Promise<HTMLScriptElement>((resolve, reject) => {
+  const promise = new Promise<void>((resolve, reject) => {
     function handleError(reason: string) {
       document.head.removeChild(script)
       delete pendingScripts[src]
@@ -28,7 +28,8 @@ export function loadScript({ src, id, name }: ScriptParams) {
     }
 
     function handleLoad() {
-      resolve(script)
+      document.head.removeChild(script)
+      resolve()
     }
 
     script.onload = handleLoad

@@ -31,33 +31,32 @@ export function RevolutCheckoutLoader(
     return Promise.resolve(loaded(token))
   }
 
-  return RevolutPaymentsVersionLoader(mode).then((version) =>
-    loadRevolutCheckout(version, token, mode)
-  )
+  return RevolutPaymentsVersionLoader(mode)
+    .then((version) => loadRevolutCheckout(version, mode, 'RevolutCheckout'))
+    .then((revolutCheckout) => revolutCheckout(token))
 }
 
-function loadRevolutCheckout(
+export function loadRevolutCheckout(
   version: string,
-  token: string,
-  mode: Mode
-): Promise<RevolutCheckoutInstance> {
+  mode: Mode,
+  scriptName: string
+): Promise<RevolutCheckout> {
   return loadScript({
     src: getVersionedUrl(URLS[mode].embed, version),
     id: 'revolut-checkout',
-    name: 'RevolutCheckout',
-  }).then((scriptElement) => {
+    name: scriptName,
+  }).then(() => {
     if (loaded) {
-      return loaded(token)
+      return loaded
     }
     if (typeof RevolutCheckout === 'function') {
       loaded = RevolutCheckout
       delete window.RevolutCheckout
 
-      return loaded(token)
+      return loaded
     } else {
-      document.head.removeChild(scriptElement)
       throw new Error(
-        `'RevolutCheckout' failed to load: RevolutCheckout is not a function`
+        `'${scriptName}' failed to load: RevolutCheckout is not a function`
       )
     }
   })
