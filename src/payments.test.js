@@ -64,6 +64,7 @@ function setup() {
     TriggerSuccessVersion,
     TriggerErrorVersion,
     RevolutPayments: RevolutCheckout.payments,
+    RevolutCheckout,
   }
 }
 
@@ -92,7 +93,7 @@ test(`should load embed script for 'dev'`, async () => {
 
   await TriggerSuccessVersion('abc12345')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.codes/embed.js?version=abc12345'
@@ -137,7 +138,7 @@ test(`should load embed script for 'prod'`, async () => {
 
   await TriggerSuccessVersion('abc12345')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/embed.js?version=abc12345'
@@ -182,7 +183,7 @@ test(`should load embed script for 'sandbox'`, async () => {
 
   await TriggerSuccessVersion('abc12345')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://sandbox-merchant.revolut.com/embed.js?version=abc12345'
@@ -255,7 +256,7 @@ test(`should support loading multiple embed scripts for 'dev'`, async () => {
 
   await TriggerSuccessVersion('abc12345')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.codes/embed.js?version=abc12345'
@@ -281,6 +282,57 @@ test(`should support loading multiple embed scripts for 'dev'`, async () => {
   })
 })
 
+test(`should support loading checkout and payments for 'dev'`, async () => {
+  const {
+    RevolutPayments,
+    MockPaymentInstance,
+    MockRevolutPayments,
+    RevolutCheckout,
+    MockInstance,
+    MockRevolutCheckout,
+    TriggerSuccessEmbed,
+    TriggerSuccessVersion,
+  } = setup()
+
+  const promise1 = RevolutPayments({
+    mode: 'dev',
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
+  })
+  const promise2 = RevolutCheckout('DEV_XXX2', 'dev')
+
+  const versionScript = document.querySelector('script#revolut-pay-version')
+  expect(versionScript).toHaveAttribute(
+    'src',
+    expect.stringMatching(
+      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
+    )
+  )
+
+  await TriggerSuccessVersion('abc12345')
+
+  const embedScript = document.querySelector('script#revolut-checkout')
+  expect(embedScript).toHaveAttribute(
+    'src',
+    'https://merchant.revolut.codes/embed.js?version=abc12345'
+  )
+
+  const spyLoad = jest.spyOn(embedScript, 'onload')
+
+  await TriggerSuccessEmbed()
+
+  const instance1 = await promise1
+  const instance2 = await promise2
+
+  expect(spyLoad).toHaveBeenCalled()
+  expect(instance1).not.toBe(instance2)
+  expect(instance1).toBe(MockPaymentInstance)
+  expect(instance2).toBe(MockInstance)
+  expect(MockRevolutPayments).toHaveBeenCalledWith({
+    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
+  })
+  expect(MockRevolutCheckout).toHaveBeenCalledWith('DEV_XXX2')
+})
+
 test(`should use 'prod' by default`, async () => {
   const {
     RevolutPayments,
@@ -304,7 +356,7 @@ test(`should use 'prod' by default`, async () => {
 
   await TriggerSuccessVersion('')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/embed.js'
@@ -338,7 +390,7 @@ test('should load embed script without version parameter if version script fails
 
   await TriggerErrorVersion()
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/embed.js'
@@ -391,7 +443,7 @@ test('should throw error if RevolutCheckout is missing', async () => {
 
   await TriggerSuccessVersion('')
 
-  const embedScript = document.querySelector('script#revolut-payments')
+  const embedScript = document.querySelector('script#revolut-checkout')
   expect(embedScript).toHaveAttribute(
     'src',
     'https://merchant.revolut.com/embed.js'

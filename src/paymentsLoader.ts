@@ -1,12 +1,12 @@
-import { MODE, URLS } from './constants'
+import { MODE } from './constants'
 import {
-  Mode,
   Locale,
+  Mode,
   RevolutCheckout,
   RevolutPaymentsModuleInstance,
 } from './types'
-import { getVersionedUrl, loadScript } from './utils'
 import { RevolutPaymentsVersionLoader } from './versionLoader'
+import { loadRevolutCheckout } from './loader'
 
 let loadedPaymentInstance: RevolutCheckout['payments'] = null
 
@@ -20,36 +20,13 @@ export function RevolutPaymentsLoader(
     return Promise.resolve(instance)
   }
 
-  return RevolutPaymentsVersionLoader(mode).then((version) =>
-    loadRevolutPayments(version, token, mode, locale)
-  )
-}
+  return RevolutPaymentsVersionLoader(mode)
+    .then((version) => loadRevolutCheckout(version, mode, 'RevolutPayments'))
+    .then((revolutCheckout) => {
+      loadedPaymentInstance = revolutCheckout.payments
 
-function loadRevolutPayments(
-  version: string,
-  token: string,
-  mode: Mode,
-  locale: Locale | 'auto'
-): Promise<RevolutPaymentsModuleInstance> {
-  return loadScript({
-    src: getVersionedUrl(URLS[mode].embed, version),
-    id: 'revolut-payments',
-    name: 'RevolutPayments',
-  }).then((scriptElement) => {
-    if (loadedPaymentInstance) {
-      return loadedPaymentInstance({ publicToken: token, locale })
-    } else if (typeof RevolutCheckout === 'function') {
-      loadedPaymentInstance = RevolutCheckout.payments
-      delete window.RevolutCheckout
-
-      return loadedPaymentInstance({ publicToken: token, locale })
-    } else {
-      document.head.removeChild(scriptElement)
-      throw new Error(
-        `'RevolutPayments' failed to load: RevolutCheckout is not a function`
-      )
-    }
-  })
+      return revolutCheckout.payments({ publicToken: token, locale })
+    })
 }
 
 RevolutPaymentsLoader.mode = MODE.PRODUCTION
