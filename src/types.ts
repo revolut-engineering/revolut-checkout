@@ -566,6 +566,7 @@ type CommonPaymentsRevolutPayOptions = {
   buttonStyle?: ButtonStyleOptions
   /** Prefill your customer details within the Revolut pay popup */
   customer?: CustomerDetails
+  savePaymentMethodForMerchant?: boolean
   /** Validation function to be resolved before a user can make payments.
    * Throw an error and the error message will be displayed in the Revolut pay popup  */
   validate?: () => Promise<boolean> | boolean
