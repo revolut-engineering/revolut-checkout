@@ -36,6 +36,7 @@ export function RevolutCheckoutLoader(
     .then((revolutCheckout) => revolutCheckout(token))
 }
 
+/** @internal */
 export function loadRevolutCheckout(
   version: string,
   mode: Mode,
