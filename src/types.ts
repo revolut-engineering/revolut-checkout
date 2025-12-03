@@ -254,7 +254,7 @@ export type CountryCode =
   | 'QA'
   | 'MZ'
 
-export type Locale = typeof LOCALES[number]
+export type Locale = (typeof LOCALES)[number]
 
 export type ValidationErrorType =
   | 'validation.card.number.incomplete'
@@ -654,9 +654,8 @@ export type RevolutPayEvents =
       payload: null
     }
 
-export type RevolutPayEventPayload<
-  T extends RevolutPayEvents['type']
-> = Extract<RevolutPayEvents, { type: T }>['payload']
+export type RevolutPayEventPayload<T extends RevolutPayEvents['type']> =
+  Extract<RevolutPayEvents, { type: T }>['payload']
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
@@ -718,6 +717,32 @@ export interface PaymentsModulePaymentRequest {
   destroy: () => void
 }
 
+export interface EmbeddedCheckoutInstance {
+  /** Manually destroy the instance	 */
+  destroy: () => void
+}
+
+export interface EmbeddedCheckoutOptions {
+  /** Empty element inside payment page */
+  target: HTMLElement
+  /** A function to create a Revolut order at a later time within the flow  */
+  createOrder: () => Promise<{ publicId: string }>
+  /** Callback will be called when the payment is completed successfully */
+  onSuccess?: (payload: { orderId: string }) => void
+  /** Callback if transaction is failed to complete, the reason should be available in the message parameter */
+  onError?: (payload: { error: RevolutCheckoutError; orderId: string }) => void
+  /** Callback if an user did not complete the transaction and canceled the authorisation */
+  onCancel?: (payload: { orderId: string | undefined }) => void
+  /** Customer's email */
+  email?: string
+  /** Contains customer's billing address */
+  billingAddress?: Address
+}
+
+export interface EmbeddedCheckout {
+  (options: EmbeddedCheckoutOptions): EmbeddedCheckoutInstance
+}
+
 export interface RevolutCheckoutInstance {
   /**
    * Show full-screen payment form with card field and user email.
@@ -745,6 +770,8 @@ export interface RevolutCheckoutInstance {
   payments: (
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
+  /** Accept payments via checkout widget */
+  embeddedCheckout: EmbeddedCheckout
 }
 
 export interface RevolutPaymentsModuleInstance {
