@@ -254,7 +254,7 @@ export type CountryCode =
   | 'QA'
   | 'MZ'
 
-export type Locale = (typeof LOCALES)[number]
+export type Locale = typeof LOCALES[number]
 
 export type ValidationErrorType =
   | 'validation.card.number.incomplete'
@@ -654,8 +654,9 @@ export type RevolutPayEvents =
       payload: null
     }
 
-export type RevolutPayEventPayload<T extends RevolutPayEvents['type']> =
-  Extract<RevolutPayEvents, { type: T }>['payload']
+export type RevolutPayEventPayload<
+  T extends RevolutPayEvents['type']
+> = Extract<RevolutPayEvents, { type: T }>['payload']
 
 export interface PaymentsModuleRevolutPayInstance {
   mount: (
