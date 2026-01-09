@@ -431,8 +431,11 @@ test('should throw error on failed loading', async () => {
 })
 
 test('should throw error if RevolutCheckout is missing', async () => {
-  const { RevolutPayments, TriggerSuccessVersion, TriggerSuccessEmbed } =
-    setup()
+  const {
+    RevolutPayments,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
+  } = setup()
 
   const promise = RevolutPayments({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',

@@ -310,8 +310,11 @@ test('should throw error on failed embed script loading', async () => {
 })
 
 test('should throw error if RevolutCheckout is missing', async () => {
-  const { RevolutCheckout, TriggerSuccessVersion, TriggerSuccessEmbed } =
-    setup()
+  const {
+    RevolutCheckout,
+    TriggerSuccessVersion,
+    TriggerSuccessEmbed,
+  } = setup()
 
   const promise = RevolutCheckout('PROD_XXX')
 
