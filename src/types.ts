@@ -347,7 +347,6 @@ export type FieldClasses = Partial<StatusRecord<string>>
 type RevolutPayButtonCashbackCurrency =
   | 'AED'
   | 'AUD'
-  | 'BGN'
   | 'CAD'
   | 'CHF'
   | 'CZK'
