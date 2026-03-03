@@ -723,6 +723,8 @@ export interface EmbeddedCheckoutInstance {
 }
 
 export interface EmbeddedCheckoutOptions {
+  publicToken: string
+  locale?: string | 'auto'
   /** Empty element inside payment page */
   target: HTMLElement
   /** A function to create a Revolut order at a later time within the flow  */
@@ -930,4 +932,5 @@ export interface RevolutCheckout {
     option: RevolutPaymentsModuleOptions
   ) => RevolutPaymentsModuleInstance
   upsell: (option: RevolutUpsellModuleOptions) => RevolutUpsellModuleInstance
+  embeddedCheckout: EmbeddedCheckout
 }

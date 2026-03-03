@@ -4,6 +4,7 @@ import { RevolutCheckout, RevolutCheckoutInstance, Mode, Locale } from './types'
 import { getVersionedUrl, loadScript } from './utils'
 import { RevolutUpsellLoader } from './upsellLoader'
 import { RevolutPaymentsVersionLoader } from './versionLoader'
+import { RevolutEmbeddedCheckoutLoader } from './embeddedCheckoutLoader'
 
 let loaded: RevolutCheckout = null
 
@@ -86,3 +87,5 @@ RevolutCheckoutLoader.upsell = ({
   publicToken,
   mode = RevolutCheckoutLoader.mode,
 }: UpsellModuleParams) => RevolutUpsellLoader(publicToken, mode, locale)
+
+RevolutCheckoutLoader.embeddedCheckout = RevolutEmbeddedCheckoutLoader
