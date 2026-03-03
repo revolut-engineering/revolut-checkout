@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom'
-import { fireEvent } from '@testing-library/dom'
 import {
   triggerScriptOnLoad,
   triggerScriptOnError,
@@ -8,7 +7,6 @@ import {
 
 afterEach(() => {
   jest.resetModules()
-
   document.querySelectorAll('script').forEach((el) => el.remove())
 })
 
@@ -18,15 +16,17 @@ function setup() {
   const MockInstance = jest.fn()
   const MockRevolutCheckout = jest.fn(() => MockInstance)
 
-  const MockPaymentInstance = jest.fn()
-  const MockRevolutPayments = jest.fn(() => MockPaymentInstance)
+  const MockEmbeddedCheckoutInstance = jest.fn()
+  const MockRevolutEmbeddedCheckout = jest.fn(
+    () => MockEmbeddedCheckoutInstance
+  )
 
   const TriggerSuccessEmbed = jest.fn(
     () =>
       new Promise((resolve) => {
         setTimeout(() => {
           window.RevolutCheckout = MockRevolutCheckout
-          window.RevolutCheckout.embeddedCheckout = MockRevolutPayments
+          window.RevolutCheckout.embeddedCheckout = MockRevolutEmbeddedCheckout
           triggerScriptOnLoad('embed.js')
           resolve()
         })
@@ -56,29 +56,29 @@ function setup() {
 
   return {
     MockInstance,
-    MockPaymentInstance,
-    MockRevolutPayments,
+    MockEmbeddedCheckoutInstance,
+    MockRevolutEmbeddedCheckout,
     MockRevolutCheckout,
     TriggerSuccessEmbed,
     TriggerErrorEmbed,
     TriggerSuccessVersion,
     TriggerErrorVersion,
-    RevolutPayments: RevolutCheckout.embeddedCheckout,
+    EmbeddedCheckout: RevolutCheckout.embeddedCheckout,
     RevolutCheckout,
   }
 }
 
 test(`should load embed script for 'dev'`, async () => {
   const {
-    RevolutPayments,
+    EmbeddedCheckout,
     MockRevolutCheckout,
-    MockPaymentInstance,
-    MockRevolutPayments,
+    MockEmbeddedCheckoutInstance,
+    MockRevolutEmbeddedCheckout,
     TriggerSuccessEmbed,
     TriggerSuccessVersion,
   } = setup()
 
-  const promise = RevolutPayments({
+  const promise = EmbeddedCheckout({
     mode: 'dev',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
   })
@@ -106,24 +106,24 @@ test(`should load embed script for 'dev'`, async () => {
   const instance = await promise
 
   expect(spyLoad).toHaveBeenCalled()
-  expect(instance).toBe(MockPaymentInstance)
+  expect(instance).toBe(MockEmbeddedCheckoutInstance)
   expect(MockRevolutCheckout).not.toHaveBeenCalled()
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX',
   })
 })
 
 test(`should load embed script for 'prod'`, async () => {
   const {
-    RevolutPayments,
-    MockPaymentInstance,
+    EmbeddedCheckout,
+    MockEmbeddedCheckoutInstance,
     MockRevolutCheckout,
-    MockRevolutPayments,
+    MockRevolutEmbeddedCheckout,
     TriggerSuccessEmbed,
     TriggerSuccessVersion,
   } = setup()
 
-  const promise = RevolutPayments({
+  const promise = EmbeddedCheckout({
     mode: 'prod',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
@@ -151,24 +151,24 @@ test(`should load embed script for 'prod'`, async () => {
   const instance = await promise
 
   expect(spyLoad).toHaveBeenCalled()
-  expect(instance).toBe(MockPaymentInstance)
+  expect(instance).toBe(MockEmbeddedCheckoutInstance)
   expect(MockRevolutCheckout).not.toHaveBeenCalled()
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
   })
 })
 
 test(`should load embed script for 'sandbox'`, async () => {
   const {
-    RevolutPayments,
+    EmbeddedCheckout,
     MockRevolutCheckout,
-    MockPaymentInstance,
-    MockRevolutPayments,
+    MockEmbeddedCheckoutInstance,
+    MockRevolutEmbeddedCheckout,
     TriggerSuccessEmbed,
     TriggerSuccessVersion,
   } = setup()
 
-  const promise = RevolutPayments({
+  const promise = EmbeddedCheckout({
     mode: 'sandbox',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
   })
@@ -196,52 +196,52 @@ test(`should load embed script for 'sandbox'`, async () => {
   const instance = await promise
 
   expect(spyLoad).toHaveBeenCalled()
-  expect(instance).toBe(MockPaymentInstance)
+  expect(instance).toBe(MockEmbeddedCheckoutInstance)
   expect(MockRevolutCheckout).not.toHaveBeenCalled()
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_SANDBOX_XXX',
   })
 })
 
 test('should not request new embed script and use loaded one', async () => {
   const {
-    RevolutPayments,
-    MockRevolutPayments,
+    EmbeddedCheckout,
+    MockRevolutEmbeddedCheckout,
     TriggerSuccessVersion,
     TriggerSuccessEmbed,
   } = setup()
 
-  const promise = RevolutPayments({ publicToken: 'MERCHANT_PUBLIC_TOKEN_1' })
+  const promise = EmbeddedCheckout({ publicToken: 'MERCHANT_PUBLIC_TOKEN_1' })
 
   await TriggerSuccessVersion('')
   await TriggerSuccessEmbed()
 
   await promise
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_1',
   })
 
-  await RevolutPayments({ publicToken: 'MERCHANT_PUBLIC_TOKEN_2' })
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  await EmbeddedCheckout({ publicToken: 'MERCHANT_PUBLIC_TOKEN_2' })
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_2',
   })
 })
 
 test(`should support loading multiple embed scripts for 'dev'`, async () => {
   const {
-    RevolutPayments,
+    EmbeddedCheckout,
     MockRevolutCheckout,
-    MockPaymentInstance,
-    MockRevolutPayments,
+    MockEmbeddedCheckoutInstance,
+    MockRevolutEmbeddedCheckout,
     TriggerSuccessEmbed,
     TriggerSuccessVersion,
   } = setup()
 
-  const promise1 = RevolutPayments({
+  const promise1 = EmbeddedCheckout({
     mode: 'dev',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
   })
-  const promise2 = RevolutPayments({
+  const promise2 = EmbeddedCheckout({
     mode: 'dev',
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX2',
   })
@@ -271,193 +271,13 @@ test(`should support loading multiple embed scripts for 'dev'`, async () => {
 
   expect(spyLoad).toHaveBeenCalled()
   expect(instance1).toBe(instance2)
-  expect(instance1).toBe(MockPaymentInstance)
-  expect(instance2).toBe(MockPaymentInstance)
+  expect(instance1).toBe(MockEmbeddedCheckoutInstance)
+  expect(instance2).toBe(MockEmbeddedCheckoutInstance)
   expect(MockRevolutCheckout).not.toHaveBeenCalled()
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
   })
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
+  expect(MockRevolutEmbeddedCheckout).toHaveBeenCalledWith({
     publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX2',
   })
-})
-
-test(`should support loading checkout and payments for 'dev'`, async () => {
-  const {
-    RevolutPayments,
-    MockPaymentInstance,
-    MockRevolutPayments,
-    RevolutCheckout,
-    MockInstance,
-    MockRevolutCheckout,
-    TriggerSuccessEmbed,
-    TriggerSuccessVersion,
-  } = setup()
-
-  const promise1 = RevolutPayments({
-    mode: 'dev',
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
-  })
-  const promise2 = RevolutCheckout('DEV_XXX2', 'dev')
-
-  const versionScript = document.querySelector('script#revolut-pay-version')
-  expect(versionScript).toHaveAttribute(
-    'src',
-    expect.stringMatching(
-      /https:\/\/merchant.revolut.codes\/version.js\?version=\d+/
-    )
-  )
-
-  await TriggerSuccessVersion('abc12345')
-
-  const embedScript = document.querySelector('script#revolut-checkout')
-  expect(embedScript).toHaveAttribute(
-    'src',
-    'https://merchant.revolut.codes/embed.js?version=abc12345'
-  )
-
-  const spyLoad = jest.spyOn(embedScript, 'onload')
-
-  await TriggerSuccessEmbed()
-
-  const instance1 = await promise1
-  const instance2 = await promise2
-
-  expect(spyLoad).toHaveBeenCalled()
-  expect(instance1).not.toBe(instance2)
-  expect(instance1).toBe(MockPaymentInstance)
-  expect(instance2).toBe(MockInstance)
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_DEV_XXX1',
-  })
-  expect(MockRevolutCheckout).toHaveBeenCalledWith('DEV_XXX2')
-})
-
-test(`should use 'prod' by default`, async () => {
-  const {
-    RevolutPayments,
-    MockPaymentInstance,
-    MockRevolutPayments,
-    TriggerSuccessVersion,
-    TriggerSuccessEmbed,
-  } = setup()
-
-  const promise = RevolutPayments({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-  })
-
-  const versionScript = document.querySelector('script#revolut-pay-version')
-  expect(versionScript).toHaveAttribute(
-    'src',
-    expect.stringMatching(
-      /https:\/\/merchant.revolut.com\/version.js\?version=\d+/
-    )
-  )
-
-  await TriggerSuccessVersion('')
-
-  const embedScript = document.querySelector('script#revolut-checkout')
-  expect(embedScript).toHaveAttribute(
-    'src',
-    'https://merchant.revolut.com/embed.js'
-  )
-
-  const spyLoad = jest.spyOn(embedScript, 'onload')
-
-  await TriggerSuccessEmbed()
-
-  const instance = await promise
-
-  expect(spyLoad).toHaveBeenCalled()
-  expect(instance).toBe(MockPaymentInstance)
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-  })
-})
-
-test('should load embed script without version parameter if version script fails to load', async () => {
-  const {
-    RevolutPayments,
-    MockPaymentInstance,
-    MockRevolutPayments,
-    TriggerErrorVersion,
-    TriggerSuccessEmbed,
-  } = setup()
-
-  const promise = RevolutPayments({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-  })
-
-  await TriggerErrorVersion()
-
-  const embedScript = document.querySelector('script#revolut-checkout')
-  expect(embedScript).toHaveAttribute(
-    'src',
-    'https://merchant.revolut.com/embed.js'
-  )
-
-  const spyLoad = jest.spyOn(embedScript, 'onload')
-
-  await TriggerSuccessEmbed()
-
-  const instance = await promise
-
-  expect(spyLoad).toHaveBeenCalled()
-  expect(instance).toBe(MockPaymentInstance)
-  expect(MockRevolutPayments).toHaveBeenCalledWith({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-  })
-})
-
-test('should throw error on failed loading', async () => {
-  expect.assertions(1)
-
-  const { RevolutPayments, TriggerSuccessVersion, TriggerErrorEmbed } = setup()
-
-  try {
-    const promise = RevolutPayments({
-      publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-    })
-
-    await TriggerSuccessVersion('')
-    await TriggerErrorEmbed()
-
-    await promise
-  } catch (error) {
-    expect(error.message).toBe(
-      `'EmbeddedCheckout' failed to load: Network error encountered`
-    )
-  }
-})
-
-test('should throw error if RevolutCheckout is missing', async () => {
-  const {
-    RevolutPayments,
-    TriggerSuccessVersion,
-    TriggerSuccessEmbed,
-  } = setup()
-
-  const promise = RevolutPayments({
-    publicToken: 'MERCHANT_PUBLIC_TOKEN_PROD_XXX',
-  })
-
-  await TriggerSuccessVersion('')
-
-  const embedScript = document.querySelector('script#revolut-checkout')
-  expect(embedScript).toHaveAttribute(
-    'src',
-    'https://merchant.revolut.com/embed.js'
-  )
-
-  TriggerSuccessEmbed.mockImplementationOnce(() => {
-    // RevolutCheckout is not assigned to window
-    fireEvent.load(embedScript)
-  })
-  await TriggerSuccessEmbed()
-
-  await expect(promise).rejects.toEqual(
-    new Error(
-      `'EmbeddedCheckout' failed to load: RevolutCheckout is not a function`
-    )
-  )
 })
