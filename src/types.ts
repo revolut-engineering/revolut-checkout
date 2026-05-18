@@ -758,7 +758,7 @@ export interface RevolutCheckoutInstance {
    * @see https://developer.revolut.com/docs/revolut-checkout-js/#instance-instance-createcardfield
    */
   createCardField: (options?: CardFieldOptions) => RevolutCheckoutCardField
-  /** Accept payments via Revolut pay */
+  /** @deprecated use payments.revolutPay */
   revolutPay: (options: RevolutPayOptions) => RevolutCheckoutInstance
   /** Accept payments via open banking */
   openBanking?: (options: CommonOptions) => RevolutCheckoutInstance
